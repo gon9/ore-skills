@@ -24,3 +24,30 @@ def check_spec_file(content: str) -> list[str]:
             
     logger.info(f"Spec check completed. Found {len(issues)} issues.")
     return issues
+
+if __name__ == "__main__":
+    import argparse
+    import sys
+    
+    parser = argparse.ArgumentParser(description="Spec file checker")
+    parser.add_argument("file_path", help="Path to the spec file (Markdown)")
+    
+    args = parser.parse_args()
+    
+    try:
+        with open(args.file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+            
+        issues = check_spec_file(content)
+        
+        if issues:
+            print("Found issues:")
+            for issue in issues:
+                print(f"- {issue}")
+            sys.exit(1)
+        else:
+            print("No issues found.")
+            
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)

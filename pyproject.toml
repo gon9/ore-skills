@@ -8,7 +8,7 @@ dependencies = []
 
 [tool.uv.workspace]
 members = [
-    "packages/*",
+    "skills/*",
     "servers/*",
 ]
 
@@ -26,20 +26,20 @@ indent-style = "space"
 
 [tool.uv.sources]
 common = { workspace = true }
-media-skills = { workspace = true }
-spec-skills = { workspace = true }
+media = { workspace = true }
+spec = { workspace = true }
 ore-skills-server = { workspace = true }
 
 [tool.pytest.ini_options]
-testpaths = ["packages", "servers"]
+testpaths = ["skills", "servers"]
 python_files = ["test_*.py", "*_test.py"]
 addopts = "-ra -q"
 
 [dependency-groups]
 dev = [
     "common",
-    "media-skills",
-    "spec-skills",
+    "media",
+    "spec",
     "ore-skills-server",
     "mypy>=1.19.1",
     "pytest>=9.0.2",

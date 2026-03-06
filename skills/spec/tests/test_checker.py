@@ -1,5 +1,5 @@
 import pytest
-from spec_skills.checker import check_spec_file
+from spec.checker import check_spec_file
 
 def test_check_spec_file_empty():
     issues = check_spec_file("")

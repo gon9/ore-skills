@@ -1,9 +1,9 @@
 import pytest
 from unittest.mock import patch, MagicMock
-from media_skills.youtube import get_youtube_transcript
+from media.youtube import get_youtube_transcript
 
-@patch("media_skills.youtube.TextFormatter")
-@patch("media_skills.youtube.YouTubeTranscriptApi")
+@patch("media.youtube.TextFormatter")
+@patch("media.youtube.YouTubeTranscriptApi")
 def test_get_youtube_transcript_success(mock_api, mock_formatter_cls):
     # モックの設定
     mock_transcript = [{"text": "Hello", "start": 0.0, "duration": 1.0}]
@@ -21,7 +21,7 @@ def test_get_youtube_transcript_success(mock_api, mock_formatter_cls):
     mock_api.get_transcript.assert_called_once_with("video123", languages=['ja', 'en'])
     mock_formatter_instance.format_transcript.assert_called_once_with(mock_transcript)
 
-@patch("media_skills.youtube.YouTubeTranscriptApi")
+@patch("media.youtube.YouTubeTranscriptApi")
 def test_get_youtube_transcript_failure(mock_api):
     # エラーを発生させる
     mock_api.get_transcript.side_effect = Exception("Video not found")

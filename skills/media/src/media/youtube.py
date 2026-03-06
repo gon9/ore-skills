@@ -27,3 +27,18 @@ def get_youtube_transcript(video_id: str, languages: list[str] = ['ja', 'en']) -
     except Exception as e:
         logger.error(f"Failed to fetch transcript: {e}")
         raise
+
+if __name__ == "__main__":
+    import argparse
+    import sys
+    
+    parser = argparse.ArgumentParser(description="YouTube transcript fetcher")
+    parser.add_argument("video_id", help="YouTube Video ID")
+    parser.add_argument("--lang", nargs="+", default=['ja', 'en'], help="Languages to fetch (default: ja en)")
+    
+    args = parser.parse_args()
+    
+    try:
+        print(get_youtube_transcript(args.video_id, args.lang))
+    except Exception as e:
+        sys.exit(1)

@@ -5,10 +5,10 @@ requires-python = ">=3.12"
 [manifest]
 members = [
     "common",
-    "media-skills",
+    "media",
     "ore-skills",
     "ore-skills-server",
-    "spec-skills",
+    "spec",
 ]
 
 [[package]]
@@ -189,7 +189,7 @@ wheels = [
 [[package]]
 name = "common"
 version = "0.1.0"
-source = { editable = "packages/common" }
+source = { editable = "skills/common" }
 
 [[package]]
 name = "cryptography"
@@ -430,9 +430,9 @@ wheels = [
 ]
 
 [[package]]
-name = "media-skills"
+name = "media"
 version = "0.1.0"
-source = { editable = "packages/media-skills" }
+source = { editable = "skills/media" }
 dependencies = [
     { name = "common" },
     { name = "youtube-transcript-api" },
@@ -440,7 +440,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "common", editable = "packages/common" },
+    { name = "common", editable = "skills/common" },
     { name = "youtube-transcript-api", specifier = ">=0.6.3" },
 ]
 
@@ -494,25 +494,25 @@ source = { virtual = "." }
 [package.dev-dependencies]
 dev = [
     { name = "common" },
-    { name = "media-skills" },
+    { name = "media" },
     { name = "mypy" },
     { name = "ore-skills-server" },
     { name = "pytest" },
     { name = "ruff" },
-    { name = "spec-skills" },
+    { name = "spec" },
 ]
 
 [package.metadata]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "common", editable = "packages/common" },
-    { name = "media-skills", editable = "packages/media-skills" },
+    { name = "common", editable = "skills/common" },
+    { name = "media", editable = "skills/media" },
     { name = "mypy", specifier = ">=1.19.1" },
     { name = "ore-skills-server", editable = "servers/ore-skills-server" },
     { name = "pytest", specifier = ">=9.0.2" },
     { name = "ruff", specifier = ">=0.15.1" },
-    { name = "spec-skills", editable = "packages/spec-skills" },
+    { name = "spec", editable = "skills/spec" },
 ]
 
 [[package]]
@@ -522,16 +522,16 @@ source = { editable = "servers/ore-skills-server" }
 dependencies = [
     { name = "common" },
     { name = "mcp" },
-    { name = "media-skills" },
-    { name = "spec-skills" },
+    { name = "media" },
+    { name = "spec" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "common", editable = "packages/common" },
+    { name = "common", editable = "skills/common" },
     { name = "mcp", specifier = ">=1.0.0" },
-    { name = "media-skills", editable = "packages/media-skills" },
-    { name = "spec-skills", editable = "packages/spec-skills" },
+    { name = "media", editable = "skills/media" },
+    { name = "spec", editable = "skills/spec" },
 ]
 
 [[package]]
@@ -879,15 +879,15 @@ wheels = [
 ]
 
 [[package]]
-name = "spec-skills"
+name = "spec"
 version = "0.1.0"
-source = { editable = "packages/spec-skills" }
+source = { editable = "skills/spec" }
 dependencies = [
     { name = "common" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "common", editable = "packages/common" }]
+requires-dist = [{ name = "common", editable = "skills/common" }]
 
 [[package]]
 name = "sse-starlette"

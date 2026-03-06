@@ -1,6 +1,6 @@
 from mcp.server.fastmcp import FastMCP
-from media_skills import get_youtube_transcript
-from spec_skills import check_spec_file
+from media import get_youtube_transcript
+from spec import check_spec_file
 from common import setup_logger
 
 # ロガー設定
