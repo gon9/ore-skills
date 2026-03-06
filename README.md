@@ -4,16 +4,47 @@ AIエージェント（LLM）のためのスキル（関数・クラス群）お
 
 ## 概要
 
-このプロジェクトは、AIエージェントが利用可能なツール群を「Skills」として定義し、再利用可能な形で管理することを目的としています。
-`uv` を使用した Workspace 機能（Monorepo構成）を採用し、複数のスキルパッケージを一元管理します。
+`ore-skills` は、AIエージェント（Claude等）が利用するスキルを管理するモノレポです。
+**Progressive Disclosure（段階的開示）** の原則に基づき、必要な情報を必要な時に必要な分だけ提供する設計になっています。
+
+各スキルは独立したPythonパッケージとして実装され、以下の方法で利用できます：
+- **Git Submodule**: 他のプロジェクトに組み込んで利用（推奨）
+- **MCP Server**: AIエージェントから直接利用
+- **Python Library**: 直接importして利用
+
+## 他のプロジェクトからの利用
+
+### Git Submodule として利用（推奨）
+
+```bash
+# あなたのプロジェクトに ore-skills を追加
+cd /path/to/your-project
+git submodule add https://github.com/gon9/ore-skills.git .ore-skills
+git submodule update --init --recursive
+```
+
+詳細は [docs/usage_patterns.md](docs/usage_patterns.md) を参照してください。
 
 ## 構成
 
-このリポジトリは Monorepo 構成を採用しており、`packages/` ディレクトリ配下に各機能ごとのパッケージを配置します。
-
-- **packages/common**: 共通ユーティリティ、基底クラスなど
-- **packages/spec-skills**: Spec（仕様書・要件定義書）開発支援ツール
-- **packages/media-skills**: YouTube文字起こし・要約などのメディア処理ツール
+```
+ore-skills/
+├── skills/                 # スキルパッケージ（Progressive Disclosure構造）
+│   ├── common/             # 共通ユーティリティ
+│   ├── media/              # メディア処理スキル（YouTube文字起こし等）
+│   │   ├── SKILL.md        # [Level 1 & 2] スキルの概要
+│   │   ├── reference/      # [Level 3] 詳細ドキュメント
+│   │   └── src/media/      # 実装コード（CLI実行可能）
+│   └── spec/               # 仕様書作成・チェックスキル
+│       ├── SKILL.md
+│       ├── reference/
+│       └── src/spec/
+├── servers/                # MCPサーバー実装
+│   └── ore-skills-server/  # 統合MCPサーバー
+└── docs/                   # ドキュメント
+    ├── architecture_v2.md  # アーキテクチャ設計
+    └── usage_patterns.md   # 利用パターン
+```
 
 ## 環境
 
@@ -45,9 +76,24 @@ Claude DesktopなどのMCPクライアントから利用するには、以下の
 }
 ```
 
-### ライブラリとして利用する場合
+### Pythonライブラリとして利用する場合
 
-```bash
-# uvを使用して依存関係に追加
-uv add git+https://github.com/your-username/ore-skills --subdirectory packages/spec-skills
+ore-skills をサブモジュールとして追加後、プロジェクトの `pyproject.toml` で参照します。
+
+```toml
+# your-project/pyproject.toml
+[tool.uv.sources]
+media = { path = ".ore-skills/skills/media", editable = true }
+spec = { path = ".ore-skills/skills/spec", editable = true }
 ```
+
+```python
+# your_code/main.py
+from media import get_youtube_transcript
+from spec import check_spec_file
+
+transcript = get_youtube_transcript("video_id")
+issues = check_spec_file(content)
+```
+
+詳細は [docs/usage_patterns.md](docs/usage_patterns.md) を参照してください。
