@@ -1,0 +1,20 @@
+[project]
+name = "media-skills"
+version = "0.1.0"
+description = "Skills for media processing (YouTube, etc.)"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "common",
+    "youtube-transcript-api>=0.6.3",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/media_skills"]
+
+[tool.uv.sources]
+common = { workspace = true }

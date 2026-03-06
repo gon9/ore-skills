@@ -1,0 +1,47 @@
+[project]
+name = "ore-skills"
+version = "0.1.0"
+description = "AI Agent Skills Monorepo"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[tool.uv.workspace]
+members = [
+    "packages/*",
+    "servers/*",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "PL", "RUF"]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.uv.sources]
+common = { workspace = true }
+media-skills = { workspace = true }
+spec-skills = { workspace = true }
+ore-skills-server = { workspace = true }
+
+[tool.pytest.ini_options]
+testpaths = ["packages", "servers"]
+python_files = ["test_*.py", "*_test.py"]
+addopts = "-ra -q"
+
+[dependency-groups]
+dev = [
+    "common",
+    "media-skills",
+    "spec-skills",
+    "ore-skills-server",
+    "mypy>=1.19.1",
+    "pytest>=9.0.2",
+    "ruff>=0.15.1",
+]
