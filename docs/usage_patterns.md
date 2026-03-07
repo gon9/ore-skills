@@ -36,7 +36,7 @@ your-project/
 │   └── skills/
 │       ├── media/
 │       │   ├── SKILL.md
-│       │   └── reference/
+│       │   └── references/
 │       └── spec/
 ├── your_code/
 └── pyproject.toml

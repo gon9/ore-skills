@@ -33,11 +33,11 @@ ore-skills/
 │   ├── common/             # 共通ユーティリティ
 │   ├── media/              # メディア処理スキル（YouTube文字起こし等）
 │   │   ├── SKILL.md        # [Level 1 & 2] スキルの概要
-│   │   ├── reference/      # [Level 3] 詳細ドキュメント
+│   │   ├── references/     # [Level 3] 詳細ドキュメント
 │   │   └── src/media/      # 実装コード（CLI実行可能）
 │   └── spec/               # 仕様書作成・チェックスキル
 │       ├── SKILL.md
-│       ├── reference/
+│       ├── references/
 │       └── src/spec/
 ├── servers/                # MCPサーバー実装
 │   └── ore-skills-server/  # 統合MCPサーバー

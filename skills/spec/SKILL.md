@@ -1,6 +1,6 @@
 ---
 name: spec
-description: Specification management capabilities. Use to validate design documents and ensuring format compliance.
+description: Validates specification documents to ensure they contain required sections (概要, 要件, 構成). Use when checking design documents, specification files, or when the user mentions spec validation, document format checking, or requirements verification.
 ---
 
 # Spec Skill
@@ -14,7 +14,7 @@ This skill provides tools for managing and validating specification documents.
 Validate that a markdown specification file contains all required sections.
 
 - **Implementation**: `src/spec/checker.py`
-- **Reference**: See [reference/format.md](reference/format.md) for format requirements and CLI usage.
+- **Reference**: See [references/format.md](references/format.md) for format requirements and CLI usage.
 
 ## Usage
 

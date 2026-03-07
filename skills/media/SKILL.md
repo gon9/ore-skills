@@ -1,6 +1,6 @@
 ---
 name: media
-description: Media processing capabilities, including fetching YouTube transcripts. Use for video content analysis.
+description: Fetches and processes YouTube video transcripts for analysis, summarization, and content extraction. Use when working with YouTube videos, video transcripts, or when the user mentions YouTube, video content analysis, or transcript extraction.
 ---
 
 # Media Skill
@@ -14,7 +14,7 @@ This skill provides tools for processing media content, currently focusing on Yo
 Fetch text transcripts from YouTube videos. Useful for summarization, analysis, or extraction of information from video content.
 
 - **Implementation**: `src/media/youtube.py`
-- **Reference**: See [reference/youtube.md](reference/youtube.md) for detailed API and CLI usage.
+- **Reference**: See [references/youtube.md](references/youtube.md) for detailed API and CLI usage.
 
 ## Usage
 
