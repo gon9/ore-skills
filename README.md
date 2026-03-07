@@ -12,6 +12,10 @@ AIエージェント（LLM）のためのスキル（関数・クラス群）お
 - **MCP Server**: AIエージェントから直接利用
 - **Python Library**: 直接importして利用
 
+## コントリビュート
+
+ore-skills への貢献を歓迎します！新しいスキルを追加する場合は、[CONTRIBUTING.md](CONTRIBUTING.md) をご覧ください。
+
 ## 他のプロジェクトからの利用
 
 ### Git Submodule として利用（推奨）
