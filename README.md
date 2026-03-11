@@ -62,7 +62,9 @@ ore-skills/
 
 ### MCPサーバーとして利用する場合
 
-Claude DesktopなどのMCPクライアントから利用するには、以下の設定を `claude_desktop_config.json` 等に追加してください。
+#### ローカル利用 (stdio)
+
+Claude DesktopなどのMCPクライアントから**ローカルで**利用するには、以下の設定を `claude_desktop_config.json` 等に追加してください。
 
 ```json
 {
@@ -79,6 +81,13 @@ Claude DesktopなどのMCPクライアントから利用するには、以下の
   }
 }
 ```
+
+#### リモート利用 (SSE)
+
+EC2などでホストして**他のPCから**利用する場合は、SSE (Server-Sent Events) トランスポートを使用します。
+詳細は [docs/remote_mcp_server.md](docs/remote_mcp_server.md) を参照してください。
+
+**注意:** 現在はstdio版のみ実装されています。SSE版は設計ドキュメントのみ提供しています。
 
 ### Pythonライブラリとして利用する場合
 
