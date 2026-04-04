@@ -1,7 +1,7 @@
+from common import setup_logger
 from mcp.server.fastmcp import FastMCP
 from media import get_youtube_transcript
 from spec import check_spec_file
-from common import setup_logger
 
 # ロガー設定
 logger = setup_logger("ore-skills-server")

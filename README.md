@@ -16,9 +16,26 @@ AIエージェント（LLM）のためのスキル（関数・クラス群）お
 
 ore-skills への貢献を歓迎します！新しいスキルを追加する場合は、[CONTRIBUTING.md](CONTRIBUTING.md) をご覧ください。
 
+## Windsurf との統合（最も簡単）
+
+ore-skills は **agentskills.io 仕様に準拠** しているため、Windsurf の **Skills 機能** とネイティブに統合できます。
+
+### クイックスタート
+
+```bash
+# ore-skills をクローン
+git clone https://github.com/gon9/ore-skills.git ~/ore-skills
+
+# セットアップスクリプトを実行
+cd ~/ore-skills
+./scripts/setup-windsurf.sh
+```
+
+詳細は [docs/windsurf_integration.md](docs/windsurf_integration.md) を参照してください。
+
 ## 他のプロジェクトからの利用
 
-### Git Submodule として利用（推奨）
+### Git Submodule として利用
 
 ```bash
 # あなたのプロジェクトに ore-skills を追加

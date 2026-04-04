@@ -1,0 +1,20 @@
+[project]
+name = "diary"
+version = "0.1.0"
+description = "Interactive diary writing assistant that guides users through journal entries using interview-style questions. Supports technical research when topics require investigation. Use when the user wants to write a diary, journal entry, or daily reflection."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "common",
+    "pytz>=2026.1.post1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/diary"]
+
+[tool.uv.sources]
+common = { workspace = true }

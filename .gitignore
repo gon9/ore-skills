@@ -1,10 +1,63 @@
-# Python-generated files
-__pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
-
-# Virtual environments
+# Environments
+.env
 .venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Pytest / Coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Ruff / Linting
+.ruff_cache/
+.mypy_cache/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.code-workspace
+.windsurf/
+
+# Jupyter Notebook
+.ipynb_checkpoints

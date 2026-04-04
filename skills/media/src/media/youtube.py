@@ -1,6 +1,6 @@
+from common import setup_logger
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.formatters import TextFormatter
-from common import setup_logger
 
 logger = setup_logger(__name__)
 
@@ -40,5 +40,5 @@ if __name__ == "__main__":
     
     try:
         print(get_youtube_transcript(args.video_id, args.lang))
-    except Exception as e:
+    except Exception:
         sys.exit(1)

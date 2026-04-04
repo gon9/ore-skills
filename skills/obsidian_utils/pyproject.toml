@@ -1,0 +1,14 @@
+[project]
+name = "obsidian-utils"
+version = "0.1.0"
+description = "Utilities for managing Obsidian Vaults"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+obsidian-update-index = "obsidian_utils.update_index:main"

@@ -26,9 +26,12 @@ indent-style = "space"
 
 [tool.uv.sources]
 common = { workspace = true }
+diary = { workspace = true }
 media = { workspace = true }
 spec = { workspace = true }
 ore-skills-server = { workspace = true }
+youtube-summary = { workspace = true }
+obsidian-utils = { workspace = true }
 
 [tool.pytest.ini_options]
 testpaths = ["skills", "servers"]
@@ -37,10 +40,13 @@ addopts = "-ra -q"
 
 [dependency-groups]
 dev = [
+    "diary",
     "common",
     "media",
     "spec",
     "ore-skills-server",
+    "youtube-summary",
+    "obsidian-utils",
     "mypy>=1.19.1",
     "pytest>=9.0.2",
     "ruff>=0.15.1",

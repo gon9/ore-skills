@@ -1,6 +1,7 @@
-import pytest
 import logging
+
 from common.logger import setup_logger
+
 
 def test_setup_logger():
     logger = setup_logger("test_logger")

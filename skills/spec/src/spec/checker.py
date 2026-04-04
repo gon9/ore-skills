@@ -35,7 +35,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     try:
-        with open(args.file_path, 'r', encoding='utf-8') as f:
+        with open(args.file_path, encoding='utf-8') as f:
             content = f.read()
             
         issues = check_spec_file(content)

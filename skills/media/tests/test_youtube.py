@@ -1,6 +1,8 @@
+from unittest.mock import patch
+
 import pytest
-from unittest.mock import patch, MagicMock
 from media.youtube import get_youtube_transcript
+
 
 @patch("media.youtube.TextFormatter")
 @patch("media.youtube.YouTubeTranscriptApi")
