@@ -25,32 +25,18 @@ case $choice in
     echo "📁 Workspace Skills として統合します"
     echo ""
     
-    if [ ! -d ".git" ]; then
+    if [ ! -d ".git" ] && [ ! -f ".git" ]; then
       echo "❌ エラー: Gitリポジトリのルートで実行してください"
       exit 1
     fi
     
-    SKILLS_DIR=".windsurf/skills"
+    # 実行時のカレントディレクトリ（プロジェクトルート）を基準にする
+    PROJECT_ROOT="$(pwd)"
+    SKILLS_DIR="$PROJECT_ROOT/.windsurf/skills"
     mkdir -p "$SKILLS_DIR"
     
-    # ore-skills が submodule かどうかチェック
-    if [ -d ".ore-skills" ]; then
-      ORE_SKILLS_PATH="$(pwd)/.ore-skills/skills"
-      echo "✓ 既存の .ore-skills を使用します"
-    else
-      echo "ore-skills を Git Submodule として追加しますか? (y/n)"
-      read -p "> " add_submodule
-      if [ "$add_submodule" = "y" ]; then
-        git submodule add https://github.com/gon9/ore-skills.git .ore-skills
-        git submodule update --init --recursive
-        ORE_SKILLS_PATH="$(pwd)/.ore-skills/skills"
-        echo "✓ Git Submodule として追加しました"
-      else
-        echo "ore-skills のパスを入力してください:"
-        read -p "> " input_path
-        ORE_SKILLS_PATH="$input_path"
-      fi
-    fi
+    ORE_SKILLS_PATH="$ORE_SKILLS_ROOT/skills"
+    echo "✓ ore-skills の skills を使用します: $ORE_SKILLS_PATH"
     
     echo ""
     echo "🔗 シンボリックリンクを作成中..."
@@ -63,11 +49,11 @@ case $choice in
       fi
       
       if [ -d "$skill" ] && [ -f "$skill/SKILL.md" ]; then
-        # 相対パスを計算
-        if command -v realpath &> /dev/null; then
-          relative_path=$(realpath --relative-to="$SKILLS_DIR" "$skill")
+        # 相対パスを計算 (macOSのrealpathは--relative-toをサポートしていない場合があるため、Pythonで代替するか絶対パスを使用)
+        if command -v python3 &> /dev/null; then
+          relative_path=$(python3 -c "import os.path; print(os.path.relpath('$skill', '$SKILLS_DIR'))")
         else
-          # realpath がない場合は絶対パスを使用
+          # pythonがない場合は絶対パスを使用
           relative_path="$skill"
         fi
         

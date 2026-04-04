@@ -42,6 +42,9 @@ cd ~/ore-skills
 cd /path/to/your-project
 git submodule add https://github.com/gon9/ore-skills.git .ore-skills
 git submodule update --init --recursive
+
+# プロジェクトルートでセットアップスクリプトを実行
+./.ore-skills/scripts/setup-windsurf.sh
 ```
 
 詳細は [docs/usage_patterns.md](docs/usage_patterns.md) を参照してください。
