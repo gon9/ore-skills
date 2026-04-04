@@ -47,6 +47,20 @@ git submodule update --init --recursive
 ./.ore-skills/scripts/setup-windsurf.sh
 ```
 
+### スキルのアップデート
+
+ore-skills を最新のバージョンに更新するには、以下のスクリプトを実行します。
+
+```bash
+# ore-skills 本体の更新
+cd ~/ore-skills
+./scripts/update-skills.sh
+
+# サブモジュールとして組み込んでいる場合（プロジェクトルートで実行）
+cd /path/to/your-project
+./.ore-skills/scripts/update-skills.sh
+```
+
 詳細は [docs/usage_patterns.md](docs/usage_patterns.md) を参照してください。
 
 ## 構成
