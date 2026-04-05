@@ -97,6 +97,7 @@ uv run -m your_skill_name.main --input data.json
 - **Frontmatter (必須)**:
   - `name`: スキル名（ディレクトリ名と一致）
   - `description`: 1-1024文字、「何をするか」と「いつ使うか」を含む
+  - `allowed-tools`: (オプション) 事前承認されたツールのスペース区切りリスト（例: `Bash(git:*) Read`）
   
 - **Body Content (< 5000 tokens 推奨)**:
   - ステップバイステップの手順
