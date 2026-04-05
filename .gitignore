@@ -57,7 +57,8 @@ Icon
 .vscode/
 *.swp
 *.code-workspace
-.windsurf/
+.windsurf/*
+!.windsurf/workflows/
 
 # Jupyter Notebook
 .ipynb_checkpoints
