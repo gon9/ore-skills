@@ -164,7 +164,12 @@ ore-skills は AI自身が最新の動向を調査し、リポジトリをアッ
 /update-spec
 ```
 
-このコマンドにより、AIは最新の `agentskills.io` の仕様やベストプラクティスをWeb検索し、必要に応じて `CONTRIBUTING.md` や既存スキルの `SKILL.md`、チェックツール群を自律的にアップデートする計画を提案・実行します。
+このコマンドにより、AIは以下の2つの処理を自律的に実行します:
+
+1. **仕様アップデート**: 最新の `agentskills.io` の仕様やベストプラクティスをWeb検索し、必要に応じて `CONTRIBUTING.md` や既存スキルの `SKILL.md`、チェックツール群をアップデートする計画を提案・実行します。
+2. **おすすめスキル提案**: 外部のスキルエコシステム（Anthropic公式、Vercel、awesome-agent-skills 等）を調査し、ore-skills に追加すると有用なスキル候補を3〜5件提案します。ユーザーが承認したスキルはその場で実装されます。
+
+外部スキルの参照先一覧は `docs/knowledge/external-skills-catalog.md` に記載されています。
 
 ### 検証ツールの使用
 
