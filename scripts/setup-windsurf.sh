@@ -6,17 +6,31 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ORE_SKILLS_ROOT="$(dirname "$SCRIPT_DIR")"
 
+# ore-skills リポジトリ自体の中から実行されているかを判定
+RUNNING_INSIDE_ORE_SKILLS=false
+CURRENT_DIR="$(pwd)"
+if [ "$CURRENT_DIR" = "$ORE_SKILLS_ROOT" ] || [[ "$CURRENT_DIR" == "$ORE_SKILLS_ROOT/"* ]]; then
+  RUNNING_INSIDE_ORE_SKILLS=true
+fi
+
 echo "=========================================="
 echo "  ore-skills → Windsurf Skills 統合"
 echo "=========================================="
 echo ""
 
-# 統合タイプを選択
-echo "統合タイプを選択してください:"
-echo "1) Workspace Skills (現在のプロジェクトのみ)"
-echo "2) Global Skills (すべてのプロジェクト)"
-echo ""
-read -p "選択 (1 or 2): " choice
+if [ "$RUNNING_INSIDE_ORE_SKILLS" = true ]; then
+  echo "ℹ️  ore-skills リポジトリ内から実行されています。"
+  echo "   Global Skills として統合します（Workspace は ore-skills 自身と循環するため不可）。"
+  echo ""
+  choice=2
+else
+  # 統合タイプを選択
+  echo "統合タイプを選択してください:"
+  echo "1) Workspace Skills (現在のプロジェクトのみ)"
+  echo "2) Global Skills (すべてのプロジェクト)"
+  echo ""
+  read -p "選択 (1 or 2): " choice
+fi
 
 case $choice in
   1)

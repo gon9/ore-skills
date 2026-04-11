@@ -20,16 +20,18 @@ ore-skills への貢献を歓迎します！新しいスキルを追加する場
 
 ore-skills は **agentskills.io 仕様に準拠** しているため、Windsurf の **Skills 機能** とネイティブに統合できます。
 
-### クイックスタート
+### クイックスタート（Global Skills）
 
 ```bash
 # ore-skills をクローン
 git clone https://github.com/gon9/ore-skills.git ~/ore-skills
 
-# セットアップスクリプトを実行
-cd ~/ore-skills
-./scripts/setup-windsurf.sh
+# セットアップスクリプトを実行（Global Skills として自動統合されます）
+~/ore-skills/scripts/setup-windsurf.sh
 ```
+
+> **Note:** ore-skills リポジトリ内で実行すると、自動的に Global Skills として統合されます。
+> Workspace Skills として統合したい場合は、対象プロジェクトのルートから実行してください（下記「Git Submodule として利用」参照）。
 
 詳細は [docs/windsurf_integration.md](docs/windsurf_integration.md) を参照してください。
 
