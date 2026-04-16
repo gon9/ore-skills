@@ -1,0 +1,21 @@
+[project]
+name = "pptx-skill"
+version = "1.0.0"
+description = "PowerPoint (.pptx) generation and editing skill"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "Pillow>=10.0",
+]
+
+[project.optional-dependencies]
+markitdown = [
+    "markitdown[pptx]",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["scripts"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

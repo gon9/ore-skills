@@ -94,16 +94,30 @@ uv run -m your_skill_name.main --input data.json
 
 #### SKILL.md の要件
 
-- **Frontmatter (必須)**:
-  - `name`: スキル名（ディレクトリ名と一致）
-  - `description`: 1-1024文字、「何をするか」と「いつ使うか」を含む
-  - `allowed-tools`: (オプション) 事前承認されたツールのスペース区切りリスト（例: `Bash(git:*) Read`）
-  
+- **Frontmatter — 必須フィールド**:
+  - `name`: スキル名（1-64文字、小文字英数字とハイフンのみ、ディレクトリ名と一致）
+  - `description`: 1-1024文字、「何をするか」と「いつ使うか」を含む。エージェントがスキルを選択する際のトリガー条件となるため、具体的なキーワードを含めること
+
+- **Frontmatter — オプションフィールド（agentskills.io 標準）**:
+  - `license`: ライセンス名またはライセンスファイルへの参照（例: `MIT`, `Apache-2.0`）
+  - `compatibility`: 1-500文字、環境要件を記載（例: `Requires Python 3.12+`）
+  - `metadata`: 任意のキー・バリューマップ。`author`, `version` 等を推奨
+  - `allowed-tools`: 事前承認されたツールのスペース区切りリスト（例: `Bash(git:*) Read`）。実験的機能
+
+- **Frontmatter — Claude Code 固有フィールド**（Claude Code でのみ有効、Windsurf では無視される）:
+  - `disable-model-invocation`: `true` にすると自動起動を無効化し `/name` でのみ起動
+  - `argument-hint`: `/name` 実行時の引数プレースホルダー（例: `[filename] [format]`）
+  - `context`: `fork` でサブエージェント実行、`agent` でエージェントモード実行
+  - `effort`: 推論の深さ（`low` / `medium` / `high` / `max`）
+
 - **Body Content (< 5000 tokens 推奨)**:
   - ステップバイステップの手順
   - 入出力の例
   - よくあるエッジケース
   - 詳細ドキュメントへのリンク
+
+> **⚠️ 既知の問題:** `obsidian_utils` は agentskills.io の命名規則（ハイフン区切り）に違反していますが、
+> 既存の利用者との互換性のためリネームは保留中です。新規スキルでは必ずハイフン区切りを使用してください。
 
 ### 4. pyproject.toml の設定
 

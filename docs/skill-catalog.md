@@ -15,6 +15,7 @@
 | **diary** | 🟢 実装済 | 新規作成 | インタラクティブな日記執筆支援 |
 | **obsidian_utils** | 🟢 実装済 | 既存・手動抽出 | Obsidian Vault インデックス管理 |
 | **spec** | 🟢 実装済 | workflow-patterns | 仕様書バリデーション（Plan-Firstと親和性高） |
+| **pptx** | 🟢 実装済 | Anthropic公式参考 | PptxGenJS による .pptx 生成・編集 |
 | **video_summary** | 🟢 実装済 | 既存・手動抽出 | 動画要約・テキスト抽出 |
 | **youtube_summary** | 🟢 実装済 | 既存・手動抽出 | yt-dlp/whisper フォールバック付き文字起こし |
 | **context-optimizer** | ⚪ 候補 | context-engineering | スレッドの長大なログから重要な結論のみを抽出要約 |

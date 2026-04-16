@@ -1,6 +1,8 @@
 ---
 name: media
 description: Fetches and processes YouTube video transcripts for analysis, summarization, and content extraction. Use when working with YouTube videos, video transcripts, or when the user mentions YouTube, video content analysis, or transcript extraction.
+license: MIT
+compatibility: Requires Python 3.12+
 ---
 
 # Media Skill
