@@ -35,6 +35,26 @@ git clone https://github.com/gon9/ore-skills.git ~/ore-skills
 
 詳細は [docs/windsurf_integration.md](docs/windsurf_integration.md) を参照してください。
 
+## Claude Code との統合
+
+ore-skills は **agentskills.io 仕様に準拠** しているため、Claude Code の Skills 機能とも互換性があります。
+SKILL.md の形式は Windsurf と共通で、同じスキルがそのまま動作します。
+
+### クイックスタート（Personal Skills）
+
+```bash
+# ore-skills をクローン（Windsurf と共用可能）
+git clone https://github.com/gon9/ore-skills.git ~/ore-skills
+
+# セットアップスクリプトを実行（Personal Skills として自動統合されます）
+~/ore-skills/scripts/setup-claude-code.sh
+```
+
+> **Note:** Windsurf と Claude Code の両方で使う場合は、両方のセットアップスクリプトを実行してください。
+> ore-skills は一つのクローンを共有できます。
+
+詳細は [docs/claude_code_integration.md](docs/claude_code_integration.md) を参照してください。
+
 ## 他のプロジェクトからの利用
 
 ### Git Submodule として利用
