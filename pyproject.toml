@@ -33,6 +33,7 @@ ore-skills-server = { workspace = true }
 youtube-summary = { workspace = true }
 obsidian-utils = { workspace = true }
 pptx-skill = { workspace = true }
+rules-generator = { workspace = true }
 
 [tool.pytest.ini_options]
 testpaths = ["skills", "servers"]
@@ -49,6 +50,7 @@ dev = [
     "youtube-summary",
     "obsidian-utils",
     "pptx-skill",
+    "rules-generator",
     "mypy>=1.19.1",
     "pytest>=9.0.2",
     "ruff>=0.15.1",
