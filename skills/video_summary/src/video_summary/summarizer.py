@@ -1,15 +1,17 @@
 import json
 import logging
-import os
 from pathlib import Path
 
-from openai import OpenAI
+from common import chat_completion
 
 logger = logging.getLogger(__name__)
+
 
 def generate_summary(transcript_path: str | Path, output_summary_path: str | Path) -> Path:
     """
     文字起こしデータから要約を生成し、テキストファイルとして保存する。
+
+    OpenAI または Anthropic API を使用(環境変数 LLM_PROVIDER で切替可能)。
 
     Args:
         transcript_path (str | Path): 入力となる文字起こしデータのパス (.txt または .json)
@@ -20,19 +22,13 @@ def generate_summary(transcript_path: str | Path, output_summary_path: str | Pat
 
     Raises:
         FileNotFoundError: 入力となる文字起こしファイルが存在しない場合
-        RuntimeError: OpenAI APIキーが設定されていない場合、またはAPI呼び出しに失敗した場合
+        RuntimeError: APIキーが設定されていない場合、またはAPI呼び出しに失敗した場合
     """
     transcript_path_obj = Path(transcript_path)
     output_summary_path_obj = Path(output_summary_path)
 
     if not transcript_path_obj.exists():
         raise FileNotFoundError(f"文字起こしファイルが見つかりません: {transcript_path}")
-
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        raise RuntimeError("環境変数 'OPENAI_API_KEY' が設定されていません。")
-
-    client = OpenAI(api_key=api_key)
 
     # 出力先ディレクトリが存在しない場合は作成する
     output_summary_path_obj.parent.mkdir(parents=True, exist_ok=True)
@@ -62,24 +58,21 @@ def generate_summary(transcript_path: str | Path, output_summary_path: str | Pat
 
     try:
         logger.info(f"要約の生成を開始します: {transcript_path}")
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
+        response = chat_completion(
             messages=[
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": text_content}
+                {"role": "user", "content": text_content},
             ],
             temperature=0.3,
-            max_tokens=1500
+            max_tokens=1500,
         )
-        
-        summary_text = response.choices[0].message.content
 
         # 要約結果を保存
         with open(output_summary_path_obj, "w", encoding="utf-8") as f:
-            f.write(summary_text)
+            f.write(response.content)
 
-        logger.info(f"要約の生成が完了しました: {output_summary_path}")
+        logger.info(f"要約の生成が完了しました ({response.provider}/{response.model}): {output_summary_path}")
         return output_summary_path_obj
     except Exception as e:
         logger.error(f"要約生成に失敗しました: {e}")
-        raise RuntimeError(f"OpenAI APIによる要約生成に失敗しました: {e}") from e
+        raise RuntimeError(f"LLM APIによる要約生成に失敗しました: {e}") from e

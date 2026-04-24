@@ -10,6 +10,7 @@ def test_setup_logger():
     assert len(logger.handlers) > 0
     assert isinstance(logger.handlers[0], logging.StreamHandler)
 
+
 def test_setup_logger_singleton():
     logger1 = setup_logger("test_logger_singleton")
     logger2 = setup_logger("test_logger_singleton")

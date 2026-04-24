@@ -1,5 +1,6 @@
 import argparse
 import logging
+import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -14,7 +15,8 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
-def process_video(video_path: str | Path, output_dir: str | Path = None) -> Path:
+
+def process_video(video_path: str | Path, output_dir: str | Path | None = None) -> Path:
     """
     動画ファイルから音声を抽出し、文字起こし、要約までを一貫して実行するパイプライン。
 
@@ -62,18 +64,20 @@ def process_video(video_path: str | Path, output_dir: str | Path = None) -> Path
         logger.error(f"パイプライン処理中にエラーが発生しました: {e}")
         raise
 
+
 def main():
     parser = argparse.ArgumentParser(description="動画ファイルから文字起こしと要約を生成するツール")
     parser.add_argument("video_path", type=str, help="入力動画ファイルのパス")
-    parser.add_argument("--output-dir", type=str, help="出力ディレクトリのパス（省略時は動画と同じディレクトリ）")
-    
+    parser.add_argument("--output-dir", type=str, help="出力ディレクトリのパス(省略時は動画と同じディレクトリ)")
+
     args = parser.parse_args()
 
     try:
         process_video(args.video_path, args.output_dir)
     except Exception as e:
         logger.error(f"実行に失敗しました: {e}")
-        exit(1)
+        sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

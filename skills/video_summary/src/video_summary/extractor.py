@@ -4,6 +4,7 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
+
 def extract_audio(video_path: str | Path, output_audio_path: str | Path) -> Path:
     """
     動画ファイルから音声を抽出し、MP3ファイルとして保存する。
@@ -31,21 +32,23 @@ def extract_audio(video_path: str | Path, output_audio_path: str | Path) -> Path
     # ffmpegコマンドを構築して実行
     command = [
         "ffmpeg",
-        "-i", str(video_path_obj),
-        "-q:a", "0",        # 音質指定（0は最高品質）
-        "-map", "a",        # 音声ストリームのみをマッピング
-        "-y",               # 既存のファイルを上書き
-        str(output_audio_path_obj)
+        "-i",
+        str(video_path_obj),
+        "-q:a",
+        "0",  # 音質指定(0は最高品質)
+        "-map",
+        "a",  # 音声ストリームのみをマッピング
+        "-y",  # 既存のファイルを上書き
+        str(output_audio_path_obj),
     ]
 
     try:
         logger.info(f"音声抽出を開始します: {video_path} -> {output_audio_path}")
-        result = subprocess.run(
+        subprocess.run(
             command,
             check=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
+            capture_output=True,
+            text=True,
         )
         logger.info("音声抽出が完了しました。")
         return output_audio_path_obj

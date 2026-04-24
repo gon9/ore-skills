@@ -55,6 +55,15 @@ git clone https://github.com/gon9/ore-skills.git ~/ore-skills
 
 詳細は [docs/claude_code_integration.md](docs/claude_code_integration.md) を参照してください。
 
+### 両方を同時に使う（融合戦略）
+
+Windsurf と Claude Code は競合ではなく補完関係にあります。使い分けと融合の戦略については [docs/claude-windsurf-fusion.md](docs/claude-windsurf-fusion.md) を参照してください。
+
+```bash
+# 両方を一括セットアップ
+~/ore-skills/scripts/setup-all.sh
+```
+
 ## 他のプロジェクトからの利用
 
 ### Git Submodule として利用

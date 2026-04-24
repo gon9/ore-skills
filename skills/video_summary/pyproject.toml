@@ -5,8 +5,7 @@ description = "Video transcription and summary generator"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "common",
-    "openai>=1.0.0",
+    "common[all]",
     "python-dotenv>=1.2.1",
 ]
 
