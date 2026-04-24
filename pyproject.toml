@@ -8,7 +8,14 @@ dependencies = []
 
 [tool.uv.workspace]
 members = [
-    "skills/*",
+    "skills/common",
+    "skills/diary",
+    "skills/media",
+    "skills/obsidian_utils",
+    "skills/pptx",
+    "skills/rules-generator",
+    "skills/spec",
+    "skills/youtube_summary",
     "servers/*",
 ]
 
