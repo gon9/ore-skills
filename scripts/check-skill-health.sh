@@ -52,14 +52,14 @@ for skill_path in "$SKILLS_DIR"/*; do
         continue
     fi
     
-    # 3. pyproject.toml が存在するか
-    if [ ! -f "$skill_path/pyproject.toml" ]; then
+    # 3. src/ がある場合は pyproject.toml も必須
+    if [ -d "$skill_path/src" ] && [ ! -f "$skill_path/pyproject.toml" ]; then
         echo "❌ FAILED"
-        echo "   -> Missing pyproject.toml"
+        echo "   -> Has src/ but missing pyproject.toml"
         FAILED=$((FAILED + 1))
         continue
     fi
-    
+
     # 4. テスト実行 (存在する場合)
     if [ -d "$skill_path/tests" ] && [ -n "$(ls -A "$skill_path/tests/" 2>/dev/null)" ]; then
         # -q オプションで出力を抑制し、失敗した場合のみ表示
