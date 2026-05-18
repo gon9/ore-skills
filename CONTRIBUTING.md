@@ -98,9 +98,15 @@ uv run -m your_skill_name.main --input data.json
   - `name`: スキル名（1-64文字、小文字英数字とハイフンのみ、ディレクトリ名と一致）
   - `description`: 1-1024文字、「何をするか」と「いつ使うか」を含む。エージェントがスキルを選択する際のトリガー条件となるため、具体的なキーワードを含めること
 
+  > **💡 description の書き方ベストプラクティス** (agentskills.io `optimizing-descriptions` より):
+  > - **Imperative phrasing** — `"Use this skill when..."` 形式で書く（`"This skill does..."` くだりは避ける）
+  > - **ユーザーの意図に焦点** — 内部実装ではなく、ユーザーが達成したいことを記述する
+  > - **キーワードを明示的に列挙** — `"even if they don't explicitly mention '...'"`と付け加えるとトリガー率が改善される
+  > - **整合性検証**: description を書いたら `"should trigger" / "should not trigger"` のサンプルクエリを各 8-10 件用意し、実際にエージェントにどちらの description でトリガーされるか確認する
+
 - **Frontmatter — オプションフィールド（agentskills.io 標準）**:
   - `license`: ライセンス名またはライセンスファイルへの参照（例: `MIT`, `Apache-2.0`）
-  - `compatibility`: 1-500文字、環境要件を記載（例: `Requires Python 3.12+`）
+  - `compatibility`: 1-500文字、環境要件を記載（例: `Requires Python 3.12+ and uv`）。要件が特にない汎用スキルは省略可
   - `metadata`: 任意のキー・バリューマップ。`author`, `version` 等を推奨
   - `allowed-tools`: 事前承認されたツールのスペース区切りリスト（例: `Bash(git:*) Read`）。実験的機能
 
@@ -202,6 +208,38 @@ skills-ref validate ./skills/your-skill-name
 - **Level 1 (Metadata)**: `name` と `description` は ~100 tokens
 - **Level 2 (Instructions)**: `SKILL.md` の本文は < 5000 tokens 推奨
 - **Level 3 (Resources)**: 詳細は `references/` に分離
+
+### スクリプト設計のベストプラクティス (agentskills.io `using-scripts` より)
+
+`scripts/` 配下のスクリプトはエージェントが自動実行するため、以下を守ること:
+
+- **インタラクティブプロンプト禁止** — 入力待ちで止まらないこと。`--env staging` のように引数で渡す
+- **`--help` を実装** — 使い方・オプション・使用例を記載する
+- **`--dry-run` を実装** — 破壊的操作には実行前にプレビューを出せるようにする
+- **構造化出力** — 人間向けの整形テキストより JSON 形式を優先する（エージェントが parse しやすい）
+- **冪等性 (Idempotency)** — エージェントはコマンドをリトライすることがある。「存在しなければ作成」を原則とする
+- **終了コードの意味付け** — エラー種別（not found, auth failure 等）を別の終了コードで表現し `--help` に記載する
+- **大量出力の制限** — デフォルトで上限を設け、必要なら `--offset` フラグでページネーションを提供する
+- **PEP 723 準拠の依存関係** — Python スクリプトは `# /// script` ブロックで依存関係を宣言する（`uv run scripts/xxx.py` で自動インストール）
+
+```python
+# /// script
+# dependencies = [
+#   "requests>=2.31,<3",
+# ]
+# requires-python = ">=3.12"
+# ///
+import requests
+```
+
+### SKILL.md の推奨パターン
+
+本文に以下のセクションを含めると品質が上がる:
+
+- **Gotchas** — エージェントがはまりやすい罠を箇条書きで記載
+- **チェックリスト** — 複数ステップの処理は `- [ ] Step N: ...` 形式で進捗追跡可能にする
+- **出力テンプレート** — 成果物のフォーマットをサンプルで示す
+- **バリデーションループ** — 生成 → 検証 → 修正 のサイクルを明記する
 
 ## コーディング規約
 

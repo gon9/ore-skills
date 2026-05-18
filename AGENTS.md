@@ -34,15 +34,15 @@ ore-skills/
 - ハードコーディング禁止 — 設定値は環境変数で管理すること
 - テストはモジュール単位で正常系・異常系を実装すること
 
-## 品質チェックの順序
+## コマンド
 
 コードを変更したら以下の順序で必ず実行すること:
 
-1. `uv run ruff check --fix src/ tests/` — Lintエラーの自動修正
-2. `uv run ruff format src/ tests/` — フォーマット適用
-3. `uv run pytest` — テスト実行
-
-ruff が clean になるまで pytest を実行しないこと。
+```bash
+uv run ruff check --fix src/ tests/   # 1. Lint
+uv run ruff format src/ tests/        # 2. Format
+uv run pytest                          # 3. Test (ruff が clean になってから)
+```
 
 ## よくある ruff エラーと対処
 
@@ -71,9 +71,18 @@ ruff が clean になるまで pytest を実行しないこと。
 - コミット: Conventional Commits 準拠
 - `.env` は `.gitignore` に含める、`.env.example` を提供すること
 
-## 禁止事項
+## 境界 (Boundaries)
 
-- グローバルパッケージのインストールをしないこと
-- `.env` ファイルにシークレットを直接書かないこと
-- `skills/common/` ディレクトリを Windsurf/Claude Code のスキルとして登録しないこと（内部ライブラリ用）
-- コメントやドキュメントに絵文字を追加しないこと（ユーザーが明示的に要求した場合を除く）
+### Always
+- ruff が clean になるまで pytest を実行しないこと
+- テストはモジュール単位で正常系・異常系を実装すること
+
+### Ask First
+- ルートの `pyproject.toml` の `workspace.members` / `tool.uv.sources` の変更
+- `docs/skill-catalog.md` の構造変更
+
+### Never
+- グローバルパッケージのインストール
+- `.env` ファイルにシークレットを直接書く
+- `skills/common/` を Windsurf/Claude Code のスキルとして登録（内部ライブラリ用）
+- コメントやドキュメントに絵文字を追加（ユーザーが明示的に要求した場合を除く）

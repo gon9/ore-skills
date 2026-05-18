@@ -18,10 +18,12 @@
 | **pptx** | 🟢 実装済 | Anthropic公式参考 | PptxGenJS による .pptx 生成・編集 |
 | **video_summary** | 🟢 実装済 | 既存・手動抽出 | 動画要約・テキスト抽出 |
 | **youtube_summary** | 🟢 実装済 | 既存・手動抽出 | yt-dlp/whisper フォールバック付き文字起こし |
-| **context-optimizer** | ⚪ 候補 | context-engineering | スレッドの長大なログから重要な結論のみを抽出要約 |
+| **context-optimizer** | 🟢 実装済 | context-engineering | スレッドの長大なログから重要な結論のみを抽出要約 |
 | **rules-generator** | 🟢 実装済 | rules-files | ソースや package.json を解析して `AGENTS.md` 雛形を自動生成 |
-| **task-splitter** | ⚪ 候補 | workflow-patterns | 大きな要件を 10〜15分の Atomic Task リストに自動分解 |
-| **prompt-linter** | ⚪ 候補 | prompt-patterns | 対象のプロンプトが Defensive や Few-Shot を含んでいるか診断 |
+| **task-splitter** | 🟢 実装済 | workflow-patterns | 大きな要件を 10〜15分の Atomic Task リストに自動分解 |
+| **prompt-linter** | 🟢 実装済 | prompt-patterns | 対象のプロンプトが Defensive や Few-Shot を含んでいるか診断 |
+| **git-workflow** | 🟢 実装済 | git-convention | Conventional Commits コミットメッセージ・ブランチ名・PR description 生成 |
+| **obsidian-triage** | 🟢 実装済 | obsidian | Obsidian vault の 00_Inbox ノートを分析・分類・移動支援 |
 
 ## 新規スキルの追加プロセス
 

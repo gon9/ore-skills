@@ -32,7 +32,7 @@ ore-skills-server を MCP 経由で利用する場合:
   "mcpServers": {
     "ore-skills": {
       "command": "uv",
-      "args": ["run", "--directory", "/Users/gon9a/workspace/ai_agent/ore-skills", "ore-skills-server"]
+      "args": ["run", "--directory", "/Users/gon9a/workspace/ai-agent/ore-skills", "ore-skills-server"]
     }
   }
 }
