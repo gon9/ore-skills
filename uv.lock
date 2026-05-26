@@ -14,6 +14,7 @@ members = [
     "diary",
     "media",
     "obsidian-utils",
+    "ocr-local",
     "ore-skills",
     "ore-skills-server",
     "pptx-skill",
@@ -940,6 +941,17 @@ version = "0.1.0"
 source = { editable = "skills/obsidian_utils" }
 
 [[package]]
+name = "ocr-local"
+version = "0.1.0"
+source = { editable = "skills/ocr-local" }
+dependencies = [
+    { name = "common" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "common", editable = "skills/common" }]
+
+[[package]]
 name = "onnxruntime"
 version = "1.20.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1004,6 +1016,7 @@ dev = [
     { name = "media" },
     { name = "mypy" },
     { name = "obsidian-utils" },
+    { name = "ocr-local" },
     { name = "ore-skills-server" },
     { name = "pptx-skill" },
     { name = "pytest" },
@@ -1022,6 +1035,7 @@ dev = [
     { name = "media", editable = "skills/media" },
     { name = "mypy", specifier = ">=1.19.1" },
     { name = "obsidian-utils", editable = "skills/obsidian_utils" },
+    { name = "ocr-local", editable = "skills/ocr-local" },
     { name = "ore-skills-server", editable = "servers/ore-skills-server" },
     { name = "pptx-skill", editable = "skills/pptx" },
     { name = "pytest", specifier = ">=9.0.2" },

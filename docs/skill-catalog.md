@@ -23,6 +23,7 @@
 | **task-splitter** | 🟢 実装済 | workflow-patterns | 大きな要件を 10〜15分の Atomic Task リストに自動分解 |
 | **prompt-linter** | 🟢 実装済 | prompt-patterns | 対象のプロンプトが Defensive や Few-Shot を含んでいるか診断 |
 | **git-workflow** | 🟢 実装済 | git-convention | Conventional Commits コミットメッセージ・ブランチ名・PR description 生成 |
+| **ocr-local** | 🟢 実装済 | PSN-69 | ローカル Tesseract OCR でスクショを Markdown に文字起こし |
 | **obsidian-triage** | 🟢 実装済 | obsidian | Obsidian vault の 00_Inbox ノートを分析・分類・移動支援 |
 
 ## 新規スキルの追加プロセス
