@@ -64,7 +64,7 @@ def run_tesseract(image: Path, lang: str = "jpn", psm: int = 6) -> str:
 
 def clean_japanese_ocr(text: str) -> str:
     """日本語 OCR でありがちなノイズを軽く整理する"""
-    text = re.sub(r"(?<=[\u3040-\u30ff\u4e00-\u9fff])\s+(?=[\u3040-\u30ff\u4e00-\u9fff])", "", text)
+    text = re.sub(r"(?<=[\u3040-\u30ff\u4e00-\u9fff])[ \t]+(?=[\u3040-\u30ff\u4e00-\u9fff])", "", text)
     text = re.sub(r"\n{3,}", "\n\n", text)
     return text.strip()
 

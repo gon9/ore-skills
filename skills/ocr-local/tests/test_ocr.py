@@ -62,6 +62,13 @@ class TestCleanJapaneseOcr:
         result = clean_japanese_ocr(text)
         assert result == "行1\n\n行2"
 
+    def test_preserves_newlines_between_japanese(self) -> None:
+        """改行が日本語文字間に存在しても除去されないことを確認する回帰テスト"""
+        text = "日本語の長い文章が\nここで改行されています"
+        result = clean_japanese_ocr(text)
+        assert "\n" in result
+        assert result == "日本語の長い文章が\nここで改行されています"
+
     def test_strips_whitespace(self) -> None:
         text = "  テキスト  "
         result = clean_japanese_ocr(text)
