@@ -1,11 +1,16 @@
 [project]
 name = "ocr-local"
-version = "0.1.0"
+version = "0.2.0"
 description = "ローカル Tesseract OCR でスクリーンショット画像群を Markdown に文字起こしする"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "common",
+]
+
+[project.optional-dependencies]
+capture = [
+    "playwright>=1.40",
 ]
 
 [build-system]
