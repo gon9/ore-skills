@@ -24,6 +24,7 @@
 | **prompt-linter** | 🟢 実装済 | prompt-patterns | 対象のプロンプトが Defensive や Few-Shot を含んでいるか診断 |
 | **git-workflow** | 🟢 実装済 | git-convention | Conventional Commits コミットメッセージ・ブランチ名・PR description 生成 |
 | **obsidian-triage** | 🟢 実装済 | obsidian | Obsidian vault の 00_Inbox ノートを分析・分類・移動支援 |
+| **news-youtube** | 🟢 実装済 | PSN-117 | owlclawニュースをTTS+動画化しYouTubeアップロード (Google Home再生対応) |
 
 ## 新規スキルの追加プロセス
 

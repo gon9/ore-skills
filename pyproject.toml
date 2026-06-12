@@ -16,6 +16,7 @@ members = [
     "skills/rules-generator",
     "skills/spec",
     "skills/youtube_summary",
+    "skills/news-youtube",
     "servers/*",
 ]
 
@@ -41,6 +42,7 @@ youtube-summary = { workspace = true }
 obsidian-utils = { workspace = true }
 pptx-skill = { workspace = true }
 rules-generator = { workspace = true }
+news-youtube = { workspace = true }
 
 [tool.pytest.ini_options]
 testpaths = ["skills", "servers"]
@@ -58,6 +60,7 @@ dev = [
     "obsidian-utils",
     "pptx-skill",
     "rules-generator",
+    "news-youtube",
     "mypy>=1.19.1",
     "pytest>=9.0.2",
     "ruff>=0.15.1",
