@@ -11,11 +11,11 @@ members = [
     "skills/common",
     "skills/diary",
     "skills/media",
-    "skills/obsidian_utils",
+    "skills/obsidian-utils",
     "skills/pptx",
     "skills/rules-generator",
     "skills/spec",
-    "skills/youtube_summary",
+    "skills/youtube-summary",
     "servers/*",
 ]
 
