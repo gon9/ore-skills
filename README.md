@@ -79,6 +79,7 @@ git -C ~/workspace/ai-agent/ore-skills pull   # ore-skills を更新するだけ
 
 ## 詳細ドキュメント
 
+- [docs/skill-authoring.md](docs/skill-authoring.md)
 - [docs/windsurf_integration.md](docs/windsurf_integration.md)
 - [docs/claude_code_integration.md](docs/claude_code_integration.md)
 - [docs/claude-windsurf-fusion.md](docs/claude-windsurf-fusion.md)

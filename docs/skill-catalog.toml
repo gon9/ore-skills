@@ -1,0 +1,38 @@
+[skills.context-optimizer]
+origin = "context-engineering"
+
+[skills.diary]
+origin = "新規作成"
+
+[skills.git-workflow]
+origin = "git-convention"
+
+[skills.media]
+origin = "既存・手動抽出"
+
+[skills.obsidian-triage]
+origin = "obsidian"
+
+[skills.obsidian-utils]
+origin = "既存・手動抽出"
+
+[skills.pptx]
+origin = "Anthropic公式参考"
+
+[skills.prompt-linter]
+origin = "prompt-patterns"
+
+[skills.rules-generator]
+origin = "rules-files"
+
+[skills.spec]
+origin = "workflow-patterns"
+
+[skills.task-splitter]
+origin = "workflow-patterns"
+
+[skills.video-summary]
+origin = "既存・手動抽出"
+
+[skills.youtube-summary]
+origin = "既存・手動抽出"

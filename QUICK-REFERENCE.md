@@ -23,9 +23,9 @@
 |-------|------|
 | [media](skills/media/SKILL.md) | YouTube文字起こし等のメディア処理 |
 | [spec](skills/spec/SKILL.md) | 要件定義・基本設計・API仕様書のフォーマット検証 |
-| [obsidian_utils](skills/obsidian_utils/SKILL.md) | Obsidian Vault のインデックス（MOC）を自動更新 |
-| [youtube_summary](skills/youtube_summary/SKILL.md) | yt-dlp/whisper フォールバック付きのYouTube文字起こし |
-| [video_summary](skills/video_summary/README.md) | （開発中）動画コンテンツの要約・抽出 |
+| [obsidian-utils](skills/obsidian-utils/SKILL.md) | Obsidian Vault のインデックス（MOC）を自動更新 |
+| [youtube-summary](skills/youtube-summary/SKILL.md) | yt-dlp/whisper フォールバック付きのYouTube文字起こし |
+| [video-summary](skills/video-summary/README.md) | （開発中）動画コンテンツの要約・抽出 |
 
 ★ 今後の実装予定（候補）リストは [Skill Catalog](docs/skill-catalog.md) を参照してください。
 

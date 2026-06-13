@@ -2,7 +2,7 @@
 name: pptx
 description: "Generate PowerPoint presentations (.pptx) using Node.js and PptxGenJS. Use this skill any time a .pptx file needs to be created, read, edited, or analyzed. Triggers on keywords: deck, slides, presentation, pptx, スライド, プレゼン, 発表資料."
 license: MIT
-compatibility: Requires Node.js 18+ and npm. Optional: Python 3.12+ for editing existing files.
+compatibility: "Requires Node.js 18+ and npm. Optional: Python 3.12+ for editing existing files."
 metadata:
   author: gon9a
   version: "1.0"

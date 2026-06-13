@@ -316,10 +316,10 @@ ore-skills/
 │   ├── common/
 │   ├── diary/
 │   ├── media/
-│   ├── obsidian_utils/
+│   ├── obsidian-utils/
 │   ├── pptx/
 │   ├── spec/
-│   └── youtube_summary/
+│   └── youtube-summary/
 ├── servers/                      # MCP Server (変更なし)
 │   └── ore-skills-server/
 ├── scripts/                      # 共通スクリプト
