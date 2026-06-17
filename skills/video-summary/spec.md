@@ -16,8 +16,6 @@
 
 # 構成
 
-- `src/video_summary/extractor.py`: 動画から音声を抽出するモジュール。
-- `src/video_summary/transcriber.py`: 音声ファイルから文字起こしを行い、中間ファイルを出力するモジュール。
-- `src/video_summary/summarizer.py`: 文字起こしデータを読み込み、要約を生成するモジュール。
-- `src/video_summary/pipeline.py`: 上記モジュールを統合し、動画パスから要約までを一貫して実行するパイプライン。
-- `tests/`: 各モジュールの正常系・異常系テストを配置。
+- `scripts/extract_audio.py`: 動画から音声を抽出するスクリプト。
+- `scripts/transcribe.py`: 音声ファイルから文字起こしを行い、中間ファイルを出力するスクリプト。
+- 要約生成: 文字起こしデータを読み込み、エージェントが要約を生成する。

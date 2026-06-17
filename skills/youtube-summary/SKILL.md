@@ -1,5 +1,5 @@
 ---
-name: youtube_summary
+name: youtube-summary
 description: Extracts YouTube video transcripts and manages fallback to whisper-based transcription. Use when you need to summarize or extract text from a YouTube video.
 license: MIT
 compatibility: Requires Python 3.12+

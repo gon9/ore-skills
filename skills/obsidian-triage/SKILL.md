@@ -1,6 +1,6 @@
 ---
 name: obsidian-triage
-description: Use this skill to organize, sort, or triage notes in an Obsidian vault inbox. Use when the user wants to clean up their inbox (00_Inbox), categorize notes, suggest appropriate folders or tags, or move notes to their permanent location. Triggers on keywords: Obsidian整理, 受信箱, inbox triage, ノート整理, vault整理, 00_Inbox, 積んでるノート, even if they don't explicitly mention Obsidian.
+description: "Use this skill to organize, sort, or triage notes in an Obsidian vault inbox. Use when the user wants to clean up their inbox (00_Inbox), categorize notes, suggest appropriate folders or tags, or move notes to their permanent location. Triggers on keywords: Obsidian整理, 受信箱, inbox triage, ノート整理, vault整理, 00_Inbox, 積んでるノート, even if they don't explicitly mention Obsidian."
 license: MIT
 metadata:
   author: gon9a
@@ -10,7 +10,7 @@ metadata:
 # Obsidian Triage Skill
 
 Obsidian vault の `00_Inbox/` に溜まったノートを分析・整理するスキル。
-`obsidian_utils`（インデックス管理）の補完として、**個別ノートの分類・移動**に特化する。
+`obsidian-utils`（インデックス管理）の補完として、**個別ノートの分類・移動**に特化する。
 
 ## ワークフロー
 
@@ -75,4 +75,4 @@ vault/
 - **Google Drive 同期中のファイル操作**: 移動は 1 ファイルずつ行う。大量一括移動はロックの原因になる
 - **リンク切れに注意**: Obsidian の `[[wikilink]]` は移動後にパスが変わると切れる。`[[ファイル名]]`（ファイル名のみ）形式なら問題ないが、パス付きリンクは要確認
 - **削除はしない**: 迷ったら移動しない。ユーザーに確認を取る
-- **`obsidian_utils` との棲み分け**: インデックスファイル（MOC）の更新は `obsidian_utils` スキルに任せる
+- **`obsidian-utils` との棲み分け**: インデックスファイル（MOC）の更新は `obsidian-utils` スキルに任せる
