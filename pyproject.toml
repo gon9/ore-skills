@@ -15,6 +15,7 @@ members = [
     "skills/pptx",
     "skills/rules-generator",
     "skills/spec",
+    "skills/ocr-local",
     "skills/youtube-summary",
     "servers/*",
 ]
@@ -38,6 +39,7 @@ media = { workspace = true }
 spec = { workspace = true }
 ore-skills-server = { workspace = true }
 youtube-summary = { workspace = true }
+ocr-local = { workspace = true }
 obsidian-utils = { workspace = true }
 pptx-skill = { workspace = true }
 rules-generator = { workspace = true }
@@ -58,6 +60,7 @@ dev = [
     "obsidian-utils",
     "pptx-skill",
     "rules-generator",
+    "ocr-local",
     "mypy>=1.19.1",
     "pytest>=9.0.2",
     "ruff>=0.15.1",

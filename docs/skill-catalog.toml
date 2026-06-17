@@ -36,3 +36,6 @@ origin = "既存・手動抽出"
 
 [skills.youtube-summary]
 origin = "既存・手動抽出"
+
+[skills.ocr-local]
+origin = "PSN-69"
