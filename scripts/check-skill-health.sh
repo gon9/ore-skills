@@ -5,13 +5,18 @@
 set -e
 
 SKILLS_DIR="$(dirname "$0")/../skills"
+export UV_CACHE_DIR="${UV_CACHE_DIR:-${TMPDIR:-/tmp}/ore-skills-uv-cache}"
 
 echo "🩺 Starting Skill Health Check..."
 echo "====================================="
 
+python3 "$(dirname "$0")/validate-skills.py" --strict
+python3 "$(dirname "$0")/generate-skill-catalog.py" --check
+echo "====================================="
+
 PASSED=0
 FAILED=0
-IGNORED_DIRS=("common" "video_summary")
+IGNORED_DIRS=("common")
 
 for skill_path in "$SKILLS_DIR"/*; do
     if [ ! -d "$skill_path" ] || [ "$(basename "$skill_path")" == ".DS_Store" ]; then

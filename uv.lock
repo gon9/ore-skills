@@ -1005,7 +1005,7 @@ wheels = [
 [[package]]
 name = "obsidian-utils"
 version = "0.1.0"
-source = { editable = "skills/obsidian_utils" }
+source = { editable = "skills/obsidian-utils" }
 
 [[package]]
 name = "ocr-local"
@@ -1110,7 +1110,7 @@ dev = [
     { name = "diary", editable = "skills/diary" },
     { name = "media", editable = "skills/media" },
     { name = "mypy", specifier = ">=1.19.1" },
-    { name = "obsidian-utils", editable = "skills/obsidian_utils" },
+    { name = "obsidian-utils", editable = "skills/obsidian-utils" },
     { name = "ocr-local", editable = "skills/ocr-local" },
     { name = "ore-skills-server", editable = "servers/ore-skills-server" },
     { name = "pptx-skill", editable = "skills/pptx" },
@@ -1118,7 +1118,7 @@ dev = [
     { name = "ruff", specifier = ">=0.15.1" },
     { name = "rules-generator", editable = "skills/rules-generator" },
     { name = "spec", editable = "skills/spec" },
-    { name = "youtube-summary", editable = "skills/youtube_summary" },
+    { name = "youtube-summary", editable = "skills/youtube-summary" },
 ]
 
 [[package]]
@@ -1909,7 +1909,7 @@ wheels = [
 [[package]]
 name = "youtube-summary"
 version = "0.1.0"
-source = { editable = "skills/youtube_summary" }
+source = { editable = "skills/youtube-summary" }
 dependencies = [
     { name = "faster-whisper" },
     { name = "youtube-transcript-api" },

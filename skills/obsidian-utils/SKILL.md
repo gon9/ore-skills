@@ -1,5 +1,5 @@
 ---
-name: obsidian_utils
+name: obsidian-utils
 description: Manage and update personal indexes in an Obsidian Vault. Use to automatically compile index links from a vault directory into a single note.
 license: MIT
 compatibility: Requires Python 3.12+

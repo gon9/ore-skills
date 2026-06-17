@@ -1,4 +1,4 @@
-# obsidian_utils
+# obsidian-utils
 
 Obsidian Vault のインデックス（MOC）を管理・自動更新するためのスクリプト群です。
 

@@ -1,6 +1,6 @@
 ---
 name: prompt-linter
-description: Use this skill to review, diagnose, or improve AI prompts. Use when the user wants to analyze a prompt for clarity, check if it uses best practices (defensive prompting, few-shot examples, output format constraints, role assignment), or when a prompt isn't working as expected. Triggers on keywords: プロンプト改善, プロンプト診断, prompt review, プロンプトエンジニアリング, プロンプトが効かない, system prompt, few-shot.
+description: "Use this skill to review, diagnose, or improve AI prompts. Use when the user wants to analyze a prompt for clarity, check if it uses best practices (defensive prompting, few-shot examples, output format constraints, role assignment), or when a prompt isn't working as expected. Triggers on keywords: プロンプト改善, プロンプト診断, prompt review, プロンプトエンジニアリング, プロンプトが効かない, system prompt, few-shot."
 license: MIT
 metadata:
   author: gon9a
