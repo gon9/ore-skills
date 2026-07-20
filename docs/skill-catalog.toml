@@ -1,8 +1,14 @@
+[skills.apple-design]
+origin = "emilkowalski/skills@6bf2443 (MIT)"
+
 [skills.context-optimizer]
 origin = "context-engineering"
 
 [skills.diary]
 origin = "新規作成"
+
+[skills.efficient-fable]
+origin = "既存・手動抽出"
 
 [skills.git-workflow]
 origin = "git-convention"
