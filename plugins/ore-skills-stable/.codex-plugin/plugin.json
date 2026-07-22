@@ -1,0 +1,25 @@
+{
+  "name": "ore-skills-stable",
+  "version": "0.1.0",
+  "description": "Stable, self-contained workflow skills from ore-skills for team installation.",
+  "author": {
+    "name": "gon9",
+    "url": "https://github.com/gon9"
+  },
+  "homepage": "https://github.com/gon9/ore-skills",
+  "repository": "https://github.com/gon9/ore-skills",
+  "keywords": ["agent-skills", "codex", "workflows"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Ore Skills Stable",
+    "shortDescription": "Stable reusable workflows for Codex",
+    "longDescription": "Install the reviewed, self-contained ore-skills workflows as one versioned team bundle.",
+    "developerName": "gon9",
+    "category": "Productivity",
+    "capabilities": ["Workflow"],
+    "defaultPrompt": [
+      "Use an ore-skills workflow to handle this task.",
+      "Review this task and choose the matching stable skill."
+    ]
+  }
+}

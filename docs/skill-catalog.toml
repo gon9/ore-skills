@@ -1,47 +1,69 @@
 [skills.apple-design]
 origin = "emilkowalski/skills@6bf2443 (MIT)"
+channel = "stable"
+plugin_bundle = "core"
 
 [skills.context-optimizer]
 origin = "context-engineering"
+channel = "stable"
+plugin_bundle = "core"
 
 [skills.diary]
 origin = "新規作成"
+channel = "stable"
 
 [skills.efficient-fable]
 origin = "既存・手動抽出"
+channel = "experimental"
 
 [skills.git-workflow]
 origin = "git-convention"
+channel = "stable"
+plugin_bundle = "core"
 
 [skills.media]
 origin = "既存・手動抽出"
+channel = "stable"
 
 [skills.obsidian-triage]
 origin = "obsidian"
+channel = "stable"
+plugin_bundle = "core"
 
 [skills.obsidian-utils]
 origin = "既存・手動抽出"
+channel = "stable"
 
 [skills.pptx]
 origin = "Anthropic公式参考"
+channel = "stable"
 
 [skills.prompt-linter]
 origin = "prompt-patterns"
+channel = "stable"
+plugin_bundle = "core"
 
 [skills.rules-generator]
 origin = "rules-files"
+channel = "stable"
 
 [skills.spec]
 origin = "workflow-patterns"
+channel = "stable"
 
 [skills.task-splitter]
 origin = "workflow-patterns"
+channel = "stable"
+plugin_bundle = "core"
 
 [skills.video-summary]
 origin = "既存・手動抽出"
+channel = "stable"
 
 [skills.youtube-summary]
 origin = "既存・手動抽出"
+channel = "stable"
 
 [skills.ocr-local]
 origin = "PSN-69"
+channel = "stable"

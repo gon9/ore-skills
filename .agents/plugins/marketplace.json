@@ -1,0 +1,20 @@
+{
+  "name": "ore-skills",
+  "interface": {
+    "displayName": "Ore Skills"
+  },
+  "plugins": [
+    {
+      "name": "ore-skills-stable",
+      "source": {
+        "source": "local",
+        "path": "./plugins/ore-skills-stable"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

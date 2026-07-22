@@ -1,5 +1,7 @@
 # Skills / MCP 構成に関する調査報告と方針
 
+> 初期再設計時の調査記録です。現在の運用方針は [usage_patterns.md](usage_patterns.md) を正本とし、Skill-first、MCPは外部・動的能力に限定した実験面とします。
+
 Anthropic公式の「Skills」の思想、およびModel Context Protocol (MCP) のベストプラクティスを調査しました。
 これを踏まえ、`ore-skills` のあるべき姿を再定義します。
 
@@ -22,7 +24,7 @@ AIエージェントのためのスキル開発では、**「Pythonコードの�
 
 ## 2. MCP (Model Context Protocol) との関係
 
-MCPは、これらのSkillsをAI（Claude等）と接続するための標準プロトコルです。
+MCPは、外部サービスや動的な実行能力をAI（Claude等）と接続するための標準プロトコルです。Skillの知識・手順配布そのものには不要です。
 調査の結果、MCPサーバーの実装には以下のパターンが推奨されます。
 
 *   **ドメイン駆動**: 関連するツール群を1つの「MCP Server」としてまとめる。
@@ -52,7 +54,7 @@ ore-skills/
 │   │   ├── SKILL.md
 │   │   └── src/spec/
 │   └── common/           # 共通ライブラリ
-└── server/               # 統合MCPサーバー
+└── servers/              # 実験的MCPサーバー
     └── pyproject.toml
 ```
 
@@ -65,8 +67,8 @@ ore-skills/
     `skills/media`, `skills/spec` をWorkspaceメンバーとして管理し、依存関係を一元管理する方針は維持します（ベストプラクティス通り）。
 
 3.  **MCPサーバーの粒度**:
-    *   開発時: `server/` ディレクトリの統合サーバーから全スキルを利用可能にする。
-    *   配布時: 各スキル単体でも利用可能なように、依存関係を整理する。
+    *   外部API、認証、動的データなど、実行時接続が必要な能力だけを公開する。
+    *   全スキルのMCP化は行わず、公開ツールには契約テストを置く。
 
 ## 4. 結論
 

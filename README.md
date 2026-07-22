@@ -1,6 +1,6 @@
 # ore-skills
 
-AIエージェント（LLM）のためのスキル（関数・クラス群）およびMCP（Model Context Protocol）サーバーを管理するリポジトリです。
+AIエージェント（LLM）のためのSkillを管理し、必要な外部・動的能力だけを実験的なMCP（Model Context Protocol）サーバーとして公開するリポジトリです。
 
 ## 概要
 
@@ -8,8 +8,9 @@ AIエージェント（LLM）のためのスキル（関数・クラス群）お
 **Progressive Disclosure（段階的開示）** の原則に基づき、必要な情報を必要な時に必要な分だけ提供する設計になっています。
 
 各スキルは `SKILL.md` を核に独立したパッケージとして実装され、以下の方法で利用できます：
-- **グローバル symlink (推奨)**: `scripts/install.sh` で `~/.agents/skills/`, `~/.claude/skills/`, `~/.codeium/windsurf/skills/` に symlink。どのプロジェクトのワークディレクトリでも同じスキルが認識される
-- **MCP Server**: AIエージェントから直接利用
+- **グローバル symlink (推奨)**: `scripts/install.sh` で `~/.agents/skills/`, `~/.claude/skills/`, `~/.codeium/windsurf/skills/` に symlink。`~/.agents/skills/` は Codex / Antigravity / Devin などの cross-agent 互換面として扱う
+- **Codex Plugin**: レビュー済みstableスキルをチームへまとめて配布
+- **MCP Server（実験的）**: 外部・動的な実行能力だけをツールとして公開
 - **Python Library**: 必要な場合のみ直接 import
 
 > **NOTE**: 過去のグローバルルール「Git Submodule で他リポジトリに組み込む」は **非推奨** に変更しました。
@@ -29,26 +30,29 @@ ore-skills は **agentskills.io 仕様準拠** で、Windsurf / Claude Code / �
 git clone https://github.com/gon9/ore-skills.git ~/workspace/ai-agent/ore-skills
 
 # 2. 全エージェントから読まれる位置へ symlink を張る
-bash ~/workspace/ai-agent/ore-skills/scripts/install.sh
+bash ~/workspace/ai-agent/ore-skills/scripts/install.sh --channel=stable
 
 # 3. 設置状態を確認
-bash ~/workspace/ai-agent/ore-skills/scripts/doctor.sh
+bash ~/workspace/ai-agent/ore-skills/scripts/doctor.sh --channel=stable
 ```
 
-`install.sh` は以下3パスに symlink を作成します（既存 dangling symlink は対話確認のうえ修復、実体ディレクトリは `.bak.<timestamp>` に退避してから置換）:
+`install.sh` は以下4パスに symlink を作成します（既存 dangling symlink は対話確認のうえ修復、実体ディレクトリは `.bak.<timestamp>` に退避してから置換）:
 
 | パス | 用途 |
 |---|---|
-| `~/.agents/skills/<name>` | **cross-agent** (Windsurf が公式に追加スキャン、将来の他エージェント互換用) |
+| `~/.agents/skills/<name>` | **cross-agent** (Codex / Antigravity / Devin など、共有スキル面として利用) |
 | `~/.claude/skills/<name>` | Claude Code Personal Skills |
 | `~/.codeium/windsurf/skills/<name>` | Windsurf Global Skills |
+| `~/.cursor/skills/<name>` | Cursor Global Skills |
 
 これだけで **どの作業リポジトリにいても、Windsurf / Claude Code 等から同じ skill が呼び出せます**。各作業リポジトリには何も追加しません（submodule なし、`.claude/` `.windsurf/` ディレクトリ追加なし）。
 
 ### よく使うコマンド
 
 ```bash
-bash scripts/install.sh                     # 全3パスへ配置（既存と衝突したら対話確認）
+bash scripts/install.sh                     # 全4パスへ配置（既存と衝突したら対話確認）
+bash scripts/install.sh --channel=experimental # 実験中のskillだけ配置
+bash scripts/install.sh --channel=all       # stableとexperimentalの両方を配置
 bash scripts/install.sh --dry-run           # 変更内容だけ確認
 bash scripts/install.sh --target=claude     # Claude Code だけ
 bash scripts/install.sh --target=windsurf   # Windsurf だけ
@@ -80,6 +84,8 @@ git -C ~/workspace/ai-agent/ore-skills pull   # ore-skills を更新するだけ
 ## 詳細ドキュメント
 
 - [docs/skill-authoring.md](docs/skill-authoring.md)
+- [docs/agent-compatibility.md](docs/agent-compatibility.md)
+- [docs/skills-operations-review-2026-07.md](docs/skills-operations-review-2026-07.md)
 - [docs/windsurf_integration.md](docs/windsurf_integration.md)
 - [docs/claude_code_integration.md](docs/claude_code_integration.md)
 - [docs/claude-windsurf-fusion.md](docs/claude-windsurf-fusion.md)
@@ -100,7 +106,9 @@ ore-skills/
 │       ├── references/
 │       └── src/spec/
 ├── servers/                # MCPサーバー実装
-│   └── ore-skills-server/  # 統合MCPサーバー
+│   └── ore-skills-server/  # 実験的MCPサーバー（外部・動的能力のみ）
+├── plugins/
+│   └── ore-skills-stable/  # Codex向けstable core bundle
 └── docs/                   # ドキュメント
     ├── architecture_v2.md  # アーキテクチャ設計
     └── usage_patterns.md   # 利用パターン
@@ -116,7 +124,22 @@ ore-skills/
 
 ## 利用方法
 
-### MCPサーバーとして利用する場合
+### Codex Pluginとしてチーム配布する場合
+
+`plugins/ore-skills-stable/` は、単体配布できるstable coreスキルのversioned bundleです。正本は `skills/` なので、編集後は同期してください。
+
+```bash
+python3 scripts/sync-stable-plugin.py
+python3 scripts/sync-stable-plugin.py --check
+
+# このリポジトリをCodexのmarketplaceとして一度だけ登録してPluginを導入
+codex plugin marketplace add /absolute/path/to/ore-skills
+codex plugin add ore-skills-stable@ore-skills
+```
+
+### MCPサーバーとして利用する場合（実験的）
+
+MCPはSkillの代替ではありません。現在は動的実行を試すための `get_transcript` と `check_spec` だけを公開しています。
 
 #### ローカル利用 (stdio)
 
@@ -138,22 +161,21 @@ Claude DesktopなどのMCPクライアントから**ローカルで**利用す�
 }
 ```
 
-#### リモート利用 (SSE)
+#### リモート利用
 
-EC2などでホストして**他のPCから**利用する場合は、SSE (Server-Sent Events) トランスポートを使用します。
-詳細は [docs/remote_mcp_server.md](docs/remote_mcp_server.md) を参照してください。
+リモート運用は未実装です。過去の設計メモは [docs/remote_mcp_server.md](docs/remote_mcp_server.md) を参照してください。
 
-**注意:** 現在はstdio版のみ実装されています。SSE版は設計ドキュメントのみ提供しています。
+**注意:** 現在はstdio版のみ実装されています。
 
 ### Pythonライブラリとして利用する場合
 
-ore-skills をサブモジュールとして追加後、プロジェクトの `pyproject.toml` で参照します。
+clone済みの ore-skills を絶対pathで明示的に参照します。アプリケーションコードが直接必要とする場合だけ使用します。
 
 ```toml
 # your-project/pyproject.toml
 [tool.uv.sources]
-media = { path = ".ore-skills/skills/media", editable = true }
-spec = { path = ".ore-skills/skills/spec", editable = true }
+media = { path = "/absolute/path/to/ore-skills/skills/media", editable = true }
+spec = { path = "/absolute/path/to/ore-skills/skills/spec", editable = true }
 ```
 
 ```python

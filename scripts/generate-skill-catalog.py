@@ -24,6 +24,7 @@ class SkillCatalogEntry:
     path: Path
     description: str
     status: str
+    channel: str
     origin: str
     structure: str
 
@@ -105,6 +106,7 @@ def collect_entries(skills_dir: Path, config: dict[str, dict[str, str]]) -> list
                 path=skill_file,
                 description=frontmatter.get("description", ""),
                 status=skill_config.get("status", "実装済"),
+                channel=skill_config.get("channel", "experimental"),
                 origin=skill_config.get("origin", "-"),
                 structure=detect_structure(skill_dir),
             )
@@ -124,11 +126,13 @@ def render_catalog(entries: list[SkillCatalogEntry], repo_root: Path) -> str:
         "## ステータス凡例",
         "",
         "- `実装済`: `skills/` に `SKILL.md` が存在し、配布対象として扱う",
+        "- `stable`: 既定の配布対象",
+        "- `experimental`: 明示的に選択した場合だけ配布する検証中のスキル",
         "",
         "## 現在のカタログ",
         "",
-        "| スキル名 | ステータス | 由来 | 構成 | description |",
-        "|---|---|---|---|---|",
+        "| スキル名 | ステータス | チャネル | 由来 | 構成 | description |",
+        "|---|---|---|---|---|---|",
     ]
 
     for entry in entries:
@@ -137,6 +141,7 @@ def render_catalog(entries: list[SkillCatalogEntry], repo_root: Path) -> str:
         row = [
             f"[{entry.name}](../{relative_path})",
             entry.status,
+            entry.channel,
             entry.origin,
             entry.structure,
             description,

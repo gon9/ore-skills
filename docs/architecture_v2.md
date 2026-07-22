@@ -1,12 +1,14 @@
 # アーキテクチャ設計書 (v2)
 
-調査結果に基づき、Anthropicの思想を取り入れた新しいアーキテクチャ定義です。
+> この文書は初期設計を現在のSkill-first方針に合わせて更新したものです。通常の知識・手順はSkillで配布し、MCPは外部・動的能力に限定した実験面として扱います。
+
+調査結果に基づき、Anthropicの思想を取り入れたアーキテクチャ定義です。
 
 ## 1. コンセプト
 
 - **Skills as a Package**: 各スキルは独立したPythonパッケージであり、かつAIへのインストラクションを持つ単位である。
 - **Monorepo Management**: `uv` workspaceにより、複数のスキルを単一リポジトリで効率的に管理する。
-- **Unified Interface**: MCP (Model Context Protocol) を通じて、全てのスキルに統一的なインターフェースでアクセスする。
+- **Skill-first Interface**: `SKILL.md` を共通インターフェースとし、MCPは外部サービスや動的実行が必要な能力にだけ使用する。
 - **Progressive Disclosure（段階的開示）**: AIエージェントに対して、すべての情報を一度に与えるのではなく、必要になった段階で必要な情報だけを提示する設計思想です。
 
 ## 2. Progressive Disclosure (段階的開示) とは
@@ -54,11 +56,11 @@ ore-skills/
 │       ├── src/            # Implementation code
 │       │   └── spec/
 │       └── tests/
-├── server/                 # [Application Layer] MCPサーバー実装
-│   └── ore-skills-server/  # 統合MCPサーバー
+├── servers/                # [Experimental Layer] MCPサーバー実装
+│   └── ore-skills-server/  # 外部・動的能力用の実験的サーバー
 │       ├── pyproject.toml
 │       └── src/ore_skills_server/
-│           └── main.py     # 各Skillsをimportし、MCP Toolとして登録する
+│           └── main.py     # 選定した動的能力だけをMCP Toolとして登録する
 └── docs/                   # Project documentation
 ```
 
