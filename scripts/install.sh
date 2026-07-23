@@ -2,7 +2,7 @@
 # install.sh — ore-skills の skills/ をエージェントが読めるグローバルパスへ symlink する
 #
 # 対象パス（複数まとめて配置できる）:
-#   - ~/.agents/skills/               (cross-agent: Windsurf が公式に追加スキャン)
+#   - ~/.agents/skills/               (cross-agent: Codex / Antigravity / Devin / Windsurf 等)
 #   - ~/.claude/skills/               (Claude Code personal scope)
 #   - ~/.codeium/windsurf/skills/     (Windsurf global scope)
 #   - ~/.cursor/skills/               (Cursor — 公式 Client Showcase 対応)
@@ -13,11 +13,14 @@
 #   - 配置はユーザの $HOME 配下のみ。リポジトリ境界を一切汚さない
 #
 # 使い方:
-#   scripts/install.sh                       # 3ターゲット全てに配置（確認あり）
+#   scripts/install.sh                       # 4ターゲット全てに配置（確認あり）
 #   scripts/install.sh --dry-run             # 実際には書き込まず、計画だけ表示
 #   scripts/install.sh --target=agents       # 単一ターゲット (agents|claude|windsurf|cursor|all)
+#   scripts/install.sh --channel=stable      # stable のみ（既定）
+#   scripts/install.sh --channel=experimental # experimental のみ
+#   scripts/install.sh --channel=all         # 全チャネル
 #   scripts/install.sh --yes                 # 確認プロンプトを省略
-#   scripts/install.sh --prune               # ore-skills/skills/ に存在しない symlink を削除
+#   scripts/install.sh --prune               # 選択チャネル外・削除済みの管理symlinkを削除
 #
 # 安全装置:
 #   - すでに正しい symlink がある場合は何もしない（冪等）
@@ -36,6 +39,7 @@ DRY_RUN=false
 ASSUME_YES=false
 PRUNE=false
 TARGET="all"
+CHANNEL="stable"
 
 for arg in "$@"; do
   case "$arg" in
@@ -43,6 +47,7 @@ for arg in "$@"; do
     --yes|-y) ASSUME_YES=true ;;
     --prune) PRUNE=true ;;
     --target=*) TARGET="${arg#--target=}" ;;
+    --channel=*) CHANNEL="${arg#--channel=}" ;;
     -h|--help)
       sed -n '2,28p' "$0"
       exit 0
@@ -57,6 +62,11 @@ done
 case "$TARGET" in
   all|agents|claude|windsurf|cursor) ;;
   *) echo "--target は all|agents|claude|windsurf|cursor のいずれか" >&2; exit 2 ;;
+esac
+
+case "$CHANNEL" in
+  stable|experimental|all) ;;
+  *) echo "--channel は stable|experimental|all のいずれか" >&2; exit 2 ;;
 esac
 
 declare -a TARGET_PATHS=()
@@ -106,6 +116,7 @@ echo "  ore-skills install"
 echo "=========================================="
 echo "ソース      : $SKILLS_SRC"
 echo "ターゲット  : ${TARGET_LABELS[*]}"
+echo "チャネル    : $CHANNEL"
 echo "dry-run     : $DRY_RUN"
 echo "prune       : $PRUNE"
 echo ""
@@ -115,18 +126,12 @@ if [[ ! -d "$SKILLS_SRC" ]]; then
   exit 1
 fi
 
-# 配布対象 skill 名の一覧
+# 配布対象 skill 名の一覧。未分類のskillは安全側でexperimentalとして扱う。
 declare -a SKILL_NAMES=()
-for skill_path in "$SKILLS_SRC"/*; do
-  [[ -d "$skill_path" ]] || continue
-  name="$(basename "$skill_path")"
-  is_excluded "$name" && continue
-  if [[ ! -f "$skill_path/SKILL.md" ]]; then
-    echo "⚠️  $name に SKILL.md が無いためスキップ" >&2
-    continue
-  fi
+while IFS= read -r name; do
+  [[ -n "$name" ]] || continue
   SKILL_NAMES+=("$name")
-done
+done < <(python3 "$SCRIPT_DIR/list-skills.py" --channel="$CHANNEL")
 
 if [[ ${#SKILL_NAMES[@]} -eq 0 ]]; then
   echo "配布対象の skill がありません。" >&2
@@ -189,6 +194,14 @@ install_one() {
   echo "  ✓ $name (新規)"
 }
 
+is_selected() {
+  local candidate="$1" selected
+  for selected in "${SKILL_NAMES[@]}"; do
+    [[ "$candidate" == "$selected" ]] && return 0
+  done
+  return 1
+}
+
 prune_target() {
   local target_dir="$1" label="$2"
   [[ -d "$target_dir" ]] || return 0
@@ -205,8 +218,8 @@ prune_target() {
       # ore-skills/skills/ 配下を指すリンクのみ判定対象
       if [[ "$current" == "$SKILLS_SRC/"* ]]; then
         local link_name="${current##*/}"
-        if [[ ! -d "$SKILLS_SRC/$link_name" ]] || is_excluded "$link_name"; then
-          echo "  - $name → 旧 skill ($current) を指しているため削除"
+        if [[ ! -d "$SKILLS_SRC/$link_name" ]] || is_excluded "$link_name" || ! is_selected "$link_name"; then
+          echo "  - $name → 削除済みまたはチャネル外 ($current) のため削除"
           run rm "$entry"
         fi
       fi

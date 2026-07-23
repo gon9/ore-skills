@@ -2,7 +2,7 @@
 
 AIコーディングエージェントの能力を、外部ツールの統合によって拡張するための技術と設計のベストプラクティスです。
 
-## Last Updated: 2026-03-29
+## Last Updated: 2026-06-28
 
 ## 現在のベストプラクティス
 
@@ -22,8 +22,11 @@ AIコーディングエージェントの能力を、外部ツールの統合に
 - このような確定的（Deterministic）なロジックはスクリプト化し、`scripts/` に格納してAIにこれを実行（Run）させる運用がベスト。
 
 ## 変化の兆候・注目トピック
-- エージェント向けに最適化された軽量なCLIツール群のオープン化と標準化競争。
+- Codex の現行ガイダンスは `AGENTS.md` を durable なリポジトリ規約として明示し、skills / MCP / automations を組み合わせる方向に寄っている。
+- `~/.agents/skills` のような共有配布面が、Codex / Antigravity / Devin 互換の cross-agent レイヤーとして実用的になってきている。
+- エージェント向けに最適化された軽量な CLI ツール群のオープン化と標準化競争が続いている。
 
 ## ore-skills への示唆
-- 💡 **既存スキル**: `ore-skills-server` は、ここにあたるMCPサーバーの実装。
-- 💡 `skills` の機能は可能な限り「推論」と「確定的実行」を分け、「確定的実行」はCLIスクリプトで提供する設計を徹底する。
+- **実験的MCP**: `ore-skills-server` は、外部・動的能力だけを公開する試験実装。
+- `skills` の機能は可能な限り「推論」と「確定的実行」を分け、「確定的実行」はCLIスクリプトで提供する設計を徹底する。
+- 配布面は `scripts/install.sh` の `--target=agents` を基準に、Codex / Antigravity / Devin 系の cross-agent 面へ寄せる。

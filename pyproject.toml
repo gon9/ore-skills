@@ -45,7 +45,7 @@ pptx-skill = { workspace = true }
 rules-generator = { workspace = true }
 
 [tool.pytest.ini_options]
-testpaths = ["skills", "servers"]
+testpaths = ["skills", "servers", "tests"]
 python_files = ["test_*.py", "*_test.py"]
 addopts = "-ra -q"
 

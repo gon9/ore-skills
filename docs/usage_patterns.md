@@ -1,127 +1,87 @@
 # ore-skills 利用パターン
 
-## 概要
-`ore-skills` を他のプロジェクトから利用する方法を説明します。
+## 基本方針
 
-## 利用パターンの比較
+`ore-skills` は **Skill-first** で運用します。知識、判断基準、手順、ローカルで実行できる補助スクリプトは `SKILL.md` と付属リソースで配布します。MCP は Skill の代替ではなく、外部サービス、認証、動的データ、長時間プロセスなど、実行時の接続が必要な能力だけを公開する実験的な境界です。
 
-### パターン1: Git Submodule（推奨）
-**用途**: 複数のプロジェクトで同じスキルセットを共有したい場合
+| 用途 | 推奨経路 | 状態 |
+|---|---|---|
+| 個人のローカル開発 | グローバル symlink | 推奨 |
+| Codex のチーム配布 | `ore-skills-stable` Plugin | 推奨 |
+| 外部・動的な実行能力 | MCP | 実験的 |
+| Pythonコードから直接利用 | 明示的なローカル path 依存 | 必要な場合のみ |
+| 各プロジェクトへのGit submodule | 使用しない | 非推奨 |
 
-#### メリット
-- スキルの定義（SKILL.md, reference/）とコードを一緒に管理できる
-- バージョン管理が容易（特定のコミットに固定可能）
-- ローカルでの開発・テストが容易
-- Progressive Disclosureの構造をそのまま利用可能
+## 配布チャネル
 
-#### デメリット
-- サブモジュールの更新が手動（`git submodule update`）
-- 初回クローン時に `--recurse-submodules` が必要
+スキルは `docs/skill-catalog.toml` で次のチャネルに分類します。
 
-#### セットアップ手順
-
-```bash
-# プロジェクトルートで ore-skills をサブモジュールとして追加
-cd /path/to/your-project
-git submodule add https://github.com/gon9/ore-skills.git .ore-skills
-
-# サブモジュールを初期化・更新
-git submodule update --init --recursive
-```
-
-#### プロジェクト構成例
-```
-your-project/
-├── .ore-skills/          # Git submodule
-│   └── skills/
-│       ├── media/
-│       │   ├── SKILL.md
-│       │   └── references/
-│       └── spec/
-├── your_code/
-└── pyproject.toml
-```
-
-#### Pythonパッケージとしての利用
-
-```toml
-# your-project/pyproject.toml
-[project]
-dependencies = [
-    "media @ file:///${PROJECT_ROOT}/.ore-skills/skills/media",
-    "spec @ file:///${PROJECT_ROOT}/.ore-skills/skills/spec",
-]
-
-[tool.uv.sources]
-media = { path = ".ore-skills/skills/media", editable = true }
-spec = { path = ".ore-skills/skills/spec", editable = true }
-```
-
-```python
-# your_code/main.py
-from media import get_youtube_transcript
-from spec import check_spec_file
-
-transcript = get_youtube_transcript("video_id")
-```
-
-#### AIエージェント（Claude等）からの利用
-AIエージェントは `.ore-skills/skills/*/SKILL.md` を読み込むことで、スキルを発見・利用できます。
-
----
-
-### パターン2: Python Package（PyPI公開）
-**用途**: 広く公開して誰でも利用できるようにしたい場合
-
-#### メリット
-- `pip install ore-skills-media` で簡単にインストール可能
-- バージョン管理が明確（セマンティックバージョニング）
-- 依存関係の解決が自動
-
-#### デメリット
-- SKILL.md や reference/ の配置が難しい（パッケージに含める必要がある）
-- Progressive Disclosureの構造を維持するには工夫が必要
-- 公開・更新の手間がかかる
-
-#### セットアップ（将来的な選択肢）
-```bash
-pip install ore-skills-media
-pip install ore-skills-spec
-```
-
----
-
-### パターン3: MCP Server経由（推奨 for AIエージェント）
-**用途**: AIエージェントからのみ利用する場合
-
-#### メリット
-- AIエージェントに最適化されたインターフェース
-- スキルの実装詳細を隠蔽できる
-- リモートサーバーとしても動作可能
-
-#### デメリット
-- Python APIとしての直接利用は不可
-- MCPクライアント（Claude Desktop等）が必要
-
-#### セットアップ手順
+- `stable`: 通常利用するレビュー済みスキル。インストーラーの既定値。
+- `experimental`: 試験運用中のスキル。明示指定した場合だけ配布。
 
 ```bash
-# ore-skills-server をインストール
-cd /path/to/ore-skills
-uv sync
+# stableのみ。通常はこちら
+bash scripts/install.sh --channel=stable
+
+# experimentalのみ
+bash scripts/install.sh --channel=experimental
+
+# 両方
+bash scripts/install.sh --channel=all
+
+# 配置状態も同じチャネル単位で確認
+bash scripts/doctor.sh --channel=stable
 ```
+
+未分類のスキルは安全側に倒して `experimental` として扱います。
+
+## パターン1: グローバル symlink
+
+リポジトリを1か所にcloneし、各エージェントのグローバルSkillディレクトリから参照します。編集内容が即座に反映されるため、個人環境での作成・検証に向いています。
+
+```bash
+git clone https://github.com/gon9/ore-skills.git ~/workspace/ai-agent/ore-skills
+cd ~/workspace/ai-agent/ore-skills
+bash scripts/install.sh --channel=stable
+bash scripts/doctor.sh --channel=stable
+```
+
+各作業リポジトリに `ore-skills` を埋め込む必要はありません。
+
+## パターン2: Codex Plugin
+
+チームで同じレビュー済みセットを導入する場合は、`plugins/ore-skills-stable/` を使います。Pluginには、外部Python依存を持たず単体配布しやすい `stable` のcoreスキルだけを収録します。
+
+```bash
+# 正本からPlugin bundleを再生成
+python3 scripts/sync-stable-plugin.py
+
+# 差分がないことをCIやレビューで確認
+python3 scripts/sync-stable-plugin.py --check
+```
+
+Pluginのスキルを直接編集せず、必ず `skills/<name>/` を編集して同期します。配布対象は `docs/skill-catalog.toml` の `plugin_bundle = "core"` で管理します。
+
+## パターン3: MCP（実験的）
+
+MCPは次の場合に限って検討します。
+
+- 外部APIや認証済みサービスへ実行時に接続する
+- 結果が実行時まで確定しない動的データを取得する
+- 長時間処理や共有状態をサーバー側で管理する
+- クライアントへ安定したツール契約を公開する必要がある
+
+現在の `ore-skills-server` は実験的なstdioサーバーで、公開ツールは `get_transcript` と `check_spec` の2つだけです。全SkillをMCP化する方針ではありません。
 
 ```json
-// Claude Desktop の設定ファイル
-// ~/Library/Application Support/Claude/claude_desktop_config.json (macOS)
 {
   "mcpServers": {
-    "ore-skills": {
+    "ore-skills-experimental": {
       "command": "uv",
       "args": [
-        "--directory",
-        "/path/to/ore-skills",
         "run",
+        "--directory",
+        "/absolute/path/to/ore-skills",
         "ore-skills-server"
       ]
     }
@@ -129,55 +89,23 @@ uv sync
 }
 ```
 
----
+MCPへツールを追加する場合は、ツール名・引数・返却値を固定する契約テストも追加します。
 
-## 推奨アプローチ
+## パターン4: Pythonから直接利用
 
-### ケース1: AIエージェント + Python開発の両方で使う
-**Git Submodule + MCP Server**
+アプリケーションコードがスキル実装を直接必要とする場合だけ、clone済みリポジトリへの明示的なpath依存を使います。submoduleは使いません。
 
-1. プロジェクトに ore-skills をサブモジュールとして追加
-2. Python コードからは直接 import
-3. AIエージェントには MCP Server 経由で公開
-
-```bash
-# サブモジュール追加
-git submodule add https://github.com/gon9/ore-skills.git .ore-skills
-
-# MCP Server 起動（開発時）
-cd .ore-skills
-uv run ore-skills-server
+```toml
+[tool.uv.sources]
+media = { path = "/absolute/path/to/ore-skills/skills/media", editable = true }
+spec = { path = "/absolute/path/to/ore-skills/skills/spec", editable = true }
 ```
 
-### ケース2: AIエージェントのみで使う
-**MCP Server のみ**
+再現可能なチーム配布が必要になった時点で、個別パッケージのversioningとregistry公開を検討します。
 
-ore-skills リポジトリをクローンして、MCP Server として起動するだけ。
+## 選び方
 
-```bash
-git clone https://github.com/gon9/ore-skills.git
-cd ore-skills
-uv sync
-uv run ore-skills-server
-```
-
-### ケース3: Python開発のみで使う（AIエージェント不要）
-**Git Submodule または pip install（将来）**
-
-現時点では Git Submodule が最適。将来的に PyPI に公開すれば `pip install` も可能。
-
----
-
-## まとめ
-
-| 利用ケース | 推奨方法 | 理由 |
-|-----------|---------|------|
-| AI + Python開発 | Git Submodule + MCP | 両方のメリットを享受 |
-| AIのみ | MCP Server | シンプル |
-| Pythonのみ | Git Submodule | SKILL.md も含めて管理可能 |
-| 広く公開 | PyPI（将来） | インストールが容易 |
-
-**現時点での最推奨**: Git Submodule
-- Progressive Disclosure の構造を保ったまま利用可能
-- バージョン管理が容易
-- ローカル開発がスムーズ
+1. 手順や知識をエージェントへ渡すだけならSkillを使う。
+2. 個人環境ではsymlink、Codexチーム配布ではPluginを使う。
+3. 外部接続や動的実行が本当に必要な能力だけMCPにする。
+4. Pythonの直接依存はアプリケーションコードが必要とする場合に限定する。

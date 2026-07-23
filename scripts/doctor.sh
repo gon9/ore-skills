@@ -5,41 +5,48 @@
 #   - 各ターゲット配下の skill が ore-skills/skills/<name> へ正しく解決されるか
 #   - dangling symlink がないか
 #   - 実体ディレクトリがあって symlink を妨げていないか
-#   - ore-skills/skills/ にあるが、いずれかのターゲットに未配置の skill
+#   - 選択した配布チャネルのskillが各ターゲットに配置されているか
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ORE_SKILLS_ROOT="$(dirname "$SCRIPT_DIR")"
 SKILLS_SRC="$ORE_SKILLS_ROOT/skills"
-EXCLUDE_NAMES=("common")
+CHANNEL="stable"
 
-is_excluded() {
-  local name="$1"
-  for ex in "${EXCLUDE_NAMES[@]}"; do
-    [[ "$name" == "$ex" ]] && return 0
-  done
-  return 1
-}
+for arg in "$@"; do
+  case "$arg" in
+    --channel=*) CHANNEL="${arg#--channel=}" ;;
+    -h|--help)
+      echo "Usage: scripts/doctor.sh [--channel=stable|experimental|all]"
+      exit 0
+      ;;
+    *) echo "不明な引数: $arg" >&2; exit 2 ;;
+  esac
+done
+
+case "$CHANNEL" in
+  stable|experimental|all) ;;
+  *) echo "--channel は stable|experimental|all のいずれか" >&2; exit 2 ;;
+esac
 
 declare -a TARGETS=(
   "$HOME/.agents/skills|cross-agent"
   "$HOME/.claude/skills|Claude Code"
   "$HOME/.codeium/windsurf/skills|Windsurf"
+  "$HOME/.cursor/skills|Cursor"
 )
 
 declare -a EXPECTED=()
-for skill_path in "$SKILLS_SRC"/*; do
-  [[ -d "$skill_path" ]] || continue
-  name="$(basename "$skill_path")"
-  is_excluded "$name" && continue
-  [[ -f "$skill_path/SKILL.md" ]] || continue
+while IFS= read -r name; do
+  [[ -n "$name" ]] || continue
   EXPECTED+=("$name")
-done
+done < <(python3 "$SCRIPT_DIR/list-skills.py" --channel="$CHANNEL")
 
 echo "=========================================="
 echo "  ore-skills doctor"
 echo "=========================================="
 echo "ソース: $SKILLS_SRC"
+echo "チャネル: $CHANNEL"
 echo ""
 echo "配布対象 skill (${#EXPECTED[@]}):"
 printf '  - %s\n' "${EXPECTED[@]}"

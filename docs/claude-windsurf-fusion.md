@@ -350,9 +350,9 @@ ore-skills/
 - `.windsurf/` — Windsurf 専用（ワークフロー）
 - 相互に干渉しない。片方を使っていなくてもエラーにならない。
 
-### Rule 3: MCP は最大公約数
+### Rule 3: MCP は外部・動的能力の境界
 
-Claude Desktop, Claude Code, Windsurf のすべてがMCPをサポートしている。Python実装を持つスキルは必ず MCP Server 経由でもアクセスできるようにする。これにより「Skills非対応のクライアント」からも利用可能になる。
+通常の知識・手順は共通の `SKILL.md` で配布する。MCPは、外部API、認証、動的データ、共有状態など実行時接続が必要な能力に限定し、Python実装を持つという理由だけではMCP化しない。
 
 ---
 
@@ -365,7 +365,7 @@ Claude Desktop, Claude Code, Windsurf のすべてがMCPをサポートしてい
 | **プロジェクトルール** | なし | AGENTS.md (共通) + CLAUDE.md (固有) |
 | **サブエージェント** | 未活用 | `.claude/agents/` で専門エージェント |
 | **Hooks** | 未活用 | ruff自動実行、ヘルスチェック |
-| **MCP** | stdio実装済 | 変更なし — すでに正しい |
+| **MCP** | stdio実装済 | 実験面として契約テスト付きで限定運用 |
 | **セットアップ** | 個別スクリプト | `setup-all.sh` で一括化 |
 
 **ore-skills の現在のアーキテクチャは、融合の土台としてすでに非常に良い状態にある。** agentskills.io 準拠の SKILL.md が共通基盤として機能しており、あとは Claude Code 固有の強力な機能（サブエージェント、Hooks、Agent Teams）を **追加** するだけで、両ツールの能力を最大限に引き出せる。
