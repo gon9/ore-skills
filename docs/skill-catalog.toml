@@ -67,3 +67,7 @@ channel = "stable"
 [skills.ocr-local]
 origin = "PSN-69"
 channel = "stable"
+
+[skills.setup-agent-notifications]
+origin = "local notification setup"
+channel = "experimental"

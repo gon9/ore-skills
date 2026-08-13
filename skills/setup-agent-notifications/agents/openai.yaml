@@ -1,0 +1,4 @@
+interface:
+  display_name: "Setup Agent Notifications"
+  short_description: "Configure reliable Claude and Codex alerts on macOS"
+  default_prompt: "Use $setup-agent-notifications to diagnose and configure Claude Code and Codex CLI notifications on this Mac."
