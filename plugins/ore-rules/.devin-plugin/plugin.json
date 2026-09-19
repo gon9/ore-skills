@@ -1,0 +1,13 @@
+{
+  "name": "ore-rules",
+  "version": "0.1.0",
+  "description": "gon9a の共通開発規約を Devin の always-on ルールとして配布するバンドル。",
+  "author": {
+    "name": "gon9",
+    "url": "https://github.com/gon9"
+  },
+  "homepage": "https://github.com/gon9/ore-skills",
+  "repository": "https://github.com/gon9/ore-skills",
+  "keywords": ["rules", "devin", "conventions"],
+  "skills": []
+}
