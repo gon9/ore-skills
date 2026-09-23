@@ -25,6 +25,7 @@ ore-skills 直下を plugin root にすると、リポジトリ自身のプロ�
 | `dev-environment.md` | Docker で統一、ローカルを汚さない、スモールスタート |
 | `architecture-defaults.md` | FastAPI / REST+OpenAPI / **LLM はモデル名を固定せず選定基準で書く** |
 | `project-governance.md` | Linear が正典、lane:1/2/3、ready label、CI で自動実行 |
+| `model-routing.md` | Fusion 型のモデル配分（指揮はフロンティア、サブエージェントは安価階層）とコンテキスト予算 |
 
 すべて `trigger: always_on`。
 
@@ -36,7 +37,7 @@ devin plugins install https://github.com/gon9/ore-skills.git#plugins/ore-rules
 
 ## Devin UI 側との関係
 
-同じ7本が Devin の Organization Rules（Customize → Rules）にも手入力されている。
+同じ8本が Devin の Organization Rules（Customize → Rules）にも手入力されている。
 **このリポジトリを正典とし、UI 側は複製として扱う。**
 内容を変えるときはここを直して plugin を更新し、UI 側の手編集はしない。
 
