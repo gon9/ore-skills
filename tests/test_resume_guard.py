@@ -257,3 +257,14 @@ def test_session_id_cannot_escape_handoff_dir(
     assert written
     assert all(env.resolve() in p.parents for p in written)
     assert not (tmp_path.parent / "evil").exists()
+
+
+def test_handoff_is_private(
+    env: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    env.mkdir(mode=0o755)
+    env.chmod(0o755)
+    transcript = _codex_transcript(tmp_path / "t.jsonl", BIG, 600)
+    assert _run(monkeypatch, capsys, {"session_id": "s", "transcript_path": str(transcript), "prompt": "続き"})
+    assert env.stat().st_mode & 0o777 == rg.PRIVATE_DIR_MODE
+    assert next(env.glob("*.md")).stat().st_mode & 0o777 == rg.PRIVATE_FILE_MODE

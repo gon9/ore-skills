@@ -43,6 +43,8 @@ DEFAULT_BYPASS_MINUTES = 10
 DEFAULT_TAIL_BYTES = 4_000_000
 RECENT_PROMPTS = 5
 SNIPPET_CHARS = 1500
+PRIVATE_DIR_MODE = 0o700
+PRIVATE_FILE_MODE = 0o600
 
 CONTINUE_PATTERN = re.compile(
     r"^\s*(/goal\b.*|続き|つづき|続けて|続行|再開|continue|resume|go on|keep going)",
@@ -217,7 +219,8 @@ def _prompt_digest(prompt: str) -> str:
 
 def write_handoff(state: TranscriptState, hook_input: dict, agent: str, out_dir: Path, now: datetime) -> Path:
     """モデルを呼ばずに transcript から機械的にハンドオフ Markdown を書く。"""
-    out_dir.mkdir(parents=True, exist_ok=True)
+    out_dir.mkdir(mode=PRIVATE_DIR_MODE, parents=True, exist_ok=True)
+    out_dir.chmod(PRIVATE_DIR_MODE)  # 会話内容を含むため本人以外に読ませない(既存ディレクトリも締める)
     session = _safe_id(str(hook_input.get("session_id", "unknown")))
     local = now.astimezone()
     path = out_dir / f"{local:%Y%m%d-%H%M%S}-{agent}-{session[:8]}.md"
@@ -255,6 +258,7 @@ def write_handoff(state: TranscriptState, hook_input: dict, agent: str, out_dir:
         "- 詳細が要るときだけ元 transcript を安いサブエージェントに grep させる(全文を読まない)",
     ]
     path.write_text("\n".join(sections) + "\n", encoding="utf-8")
+    path.chmod(PRIVATE_FILE_MODE)
     return path
 
 
