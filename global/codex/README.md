@@ -67,3 +67,25 @@ max_concurrent_threads_per_session = 3
 | 無効 | slack / spreadsheets / presentations / pdf | 3 / 3 / 2 / 1 |
 
 必要になったら `[plugins."<name>@<marketplace>"] enabled = true` に戻すだけでよい。
+
+## 4. スキル一覧の取捨選択(2026-09-26)
+
+スキルは名前と説明文が**毎リクエストに全件注入される**(呼ばれなくても固定コスト)。
+使わないものは `[[skills.config]]` で外す。
+
+```toml
+[[skills.config]]
+path = "/Users/gon9a/.agents/skills/diary/SKILL.md"   # ディレクトリではなく SKILL.md を指す
+enabled = false
+```
+
+- **path は `SKILL.md` のファイルパス**で書く。ディレクトリを指定しても無視される(0.155.1 で実測)。
+  シンボリックリンク経由のパスでも効く
+- 効いたかどうかはモデルを呼ばずに `codex debug prompt-input "hi"` の出力で確認する
+
+無効化したもの: cyrus-setup / cyrus-setup-claude-auth / cyrus-setup-linear / media / video-summary /
+youtube-summary / ocr-local / obsidian-triage / obsidian-utils / diary / efficient-fable(2 か所) /
+apple-design / rules-generator / prompt-linter / hatch-pet
+
+結果: 注入スキル 27 → 12、`prompt-input` 26,452 → 21,526 文字。
+メモリ(`memories.use_memories`)は約 1.5 万字を毎回注入するが、利用価値を優先して維持している。
