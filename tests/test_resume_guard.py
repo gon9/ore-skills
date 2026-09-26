@@ -223,3 +223,37 @@ def test_add_prompt_merges_partial_duplicate() -> None:
     state.add_prompt("続きをお願いします。あとテストも")
     state.add_prompt("別の指示")
     assert state.user_prompts == ["続きをお願いします。あとテストも", "別の指示"]
+
+
+def test_handoff_includes_blocked_prompt(
+    env: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    transcript = _codex_transcript(tmp_path / "t.jsonl", BIG, 600)
+    payload = {"session_id": "s", "transcript_path": str(transcript), "prompt": "新しくログイン画面を作って"}
+    assert _run(monkeypatch, capsys, payload)["decision"] == "block"
+    body = next(env.glob("*.md")).read_text(encoding="utf-8")
+    assert "新しくログイン画面を作って" in body
+
+
+def test_bypass_requires_same_prompt(
+    env: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    transcript = _codex_transcript(tmp_path / "t.jsonl", BIG, 600)
+    base = {"session_id": "s", "transcript_path": str(transcript)}
+    assert _run(monkeypatch, capsys, {**base, "prompt": "続き"})["decision"] == "block"
+    # 別の入力では素通しせず、改めてブロックする
+    assert _run(monkeypatch, capsys, {**base, "prompt": "別の依頼"})["decision"] == "block"
+    # 直前にブロックした入力と同じなら素通し
+    assert _run(monkeypatch, capsys, {**base, "prompt": "別の依頼"}) is None
+
+
+def test_session_id_cannot_escape_handoff_dir(
+    env: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    transcript = _codex_transcript(tmp_path / "t.jsonl", BIG, 600)
+    payload = {"session_id": "../../evil/x", "transcript_path": str(transcript), "prompt": "続き"}
+    assert _run(monkeypatch, capsys, payload)["decision"] == "block"
+    written = [p.resolve() for p in tmp_path.rglob("*") if p.is_file() and p.suffix in {".md", ".marker"}]
+    assert written
+    assert all(env.resolve() in p.parents for p in written)
+    assert not (tmp_path.parent / "evil").exists()

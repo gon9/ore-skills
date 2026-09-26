@@ -26,6 +26,7 @@ Codex CLI と Claude Code の両方で使う。標準ライブラリだけで動
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -204,10 +205,20 @@ def _clip(text: str) -> str:
     return text if len(text) <= SNIPPET_CHARS else "…" + text[-SNIPPET_CHARS:]
 
 
+def _safe_id(session: str) -> str:
+    """session_id をファイル名に使える文字だけに正規化する(パス逸脱の防止)。"""
+    return re.sub(r"[^A-Za-z0-9_-]", "_", session)[:64] or "unknown"
+
+
+def _prompt_digest(prompt: str) -> str:
+    """再送判定用に入力のハッシュを取る(内容そのものはマーカーに残さない)。"""
+    return hashlib.sha256(prompt.strip().encode("utf-8")).hexdigest()
+
+
 def write_handoff(state: TranscriptState, hook_input: dict, agent: str, out_dir: Path, now: datetime) -> Path:
     """モデルを呼ばずに transcript から機械的にハンドオフ Markdown を書く。"""
     out_dir.mkdir(parents=True, exist_ok=True)
-    session = str(hook_input.get("session_id", "unknown"))
+    session = _safe_id(str(hook_input.get("session_id", "unknown")))
     local = now.astimezone()
     path = out_dir / f"{local:%Y%m%d-%H%M%S}-{agent}-{session[:8]}.md"
     cwd = str(hook_input.get("cwd", ""))
@@ -218,6 +229,10 @@ def write_handoff(state: TranscriptState, hook_input: dict, agent: str, out_dir:
         f"- cwd: `{cwd}`",
         f"- 元 transcript: `{hook_input.get('transcript_path', '')}`",
         f"- 直近の文脈サイズ: 約 {state.context_tokens:,} tokens",
+        "",
+        "## ブロックした依頼(まだ実行されていない)",
+        "",
+        _clip(str(hook_input.get("prompt", ""))) or "(なし)",
         "",
         "## 直近のユーザー指示",
         "",
@@ -245,17 +260,18 @@ def write_handoff(state: TranscriptState, hook_input: dict, agent: str, out_dir:
 
 def _bypass_marker(out_dir: Path, session: str) -> Path:
     """セッションごとの「一度ブロックした」マーカーのパス。"""
-    return out_dir / ".bypass" / f"{session}.marker"
+    return out_dir / ".bypass" / f"{_safe_id(session)}.marker"
 
 
-def consume_bypass(out_dir: Path, session: str, bypass_minutes: int, now_ts: float) -> bool:
-    """直前にブロック済みなら素通し扱いにしてマーカーを消す。"""
+def consume_bypass(out_dir: Path, session: str, prompt: str, bypass_minutes: int, now_ts: float) -> bool:
+    """直前にブロックしたのと同じ入力の再送なら素通し扱いにする。マーカーは判定後に必ず消す。"""
     marker = _bypass_marker(out_dir, session)
     if not marker.exists():
         return False
     fresh = now_ts - marker.stat().st_mtime <= bypass_minutes * 60
+    same = marker.read_text(encoding="utf-8").strip() == _prompt_digest(prompt)
     marker.unlink(missing_ok=True)
-    return fresh
+    return fresh and same
 
 
 def block_message(reason: str, state: TranscriptState, handoff: Path, agent: str) -> str:
@@ -278,14 +294,16 @@ def decide(hook_input: dict, agent: str) -> dict | None:
 
     out_dir = Path(os.environ.get("AGENT_HANDOFF_DIR", Path.home() / ".local/state/agent-handoff"))
     session = str(hook_input.get("session_id", "unknown"))
+    prompt = str(hook_input.get("prompt", ""))
     now = datetime.now(UTC)
-    if consume_bypass(out_dir, session, _env_int("RESUME_GUARD_BYPASS_MINUTES", DEFAULT_BYPASS_MINUTES), time.time()):
+    bypass_minutes = _env_int("RESUME_GUARD_BYPASS_MINUTES", DEFAULT_BYPASS_MINUTES)
+    if consume_bypass(out_dir, session, prompt, bypass_minutes, time.time()):
         return None
 
     state = read_state(Path(transcript), _env_int("RESUME_GUARD_TAIL_BYTES", DEFAULT_TAIL_BYTES))
     intervene, reason = should_intervene(
         state,
-        str(hook_input.get("prompt", "")),
+        prompt,
         now,
         _env_int("RESUME_GUARD_CTX_TOKENS", DEFAULT_CTX_TOKENS),
         _env_int("RESUME_GUARD_IDLE_MINUTES", DEFAULT_IDLE_MINUTES),
@@ -296,7 +314,7 @@ def decide(hook_input: dict, agent: str) -> dict | None:
     handoff = write_handoff(state, hook_input, agent, out_dir, now)
     marker = _bypass_marker(out_dir, session)
     marker.parent.mkdir(parents=True, exist_ok=True)
-    marker.touch()
+    marker.write_text(_prompt_digest(prompt), encoding="utf-8")
     return {"decision": "block", "reason": block_message(reason, state, handoff, agent)}
 
 

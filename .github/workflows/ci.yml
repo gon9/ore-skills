@@ -13,7 +13,7 @@ jobs:
       - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.12"
-      - name: ruff
+      - name: ruff (hooks/ と tests/ のみ。既存コードの違反は別途対応)
         run: uv run --no-project --with ruff ruff check hooks/ tests/
       - name: pytest
-        run: uv run --no-project --with pytest pytest tests/ -q
+        run: uv run pytest -q
