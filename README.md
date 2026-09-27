@@ -117,7 +117,7 @@ ore-skills/
 ## 環境
 
 - **OS**: macOS
-- **Language**: Python 3.12+
+- **Language**: Python (version pinned in `.python-version`)
 - **Package Manager**: uv
 - **Linter/Formatter**: ruff
 - **Test**: pytest

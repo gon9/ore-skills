@@ -18,7 +18,7 @@ ore-skills 直下を plugin root にすると、リポジトリ自身のプロ�
 
 | ファイル | 内容 |
 |---|---|
-| `python-standards.md` | Python 3.12 / uv / ruff / pytest、ruff→pytest の実行順序 |
+| `python-standards.md` | 最新 stable を `.python-version` で固定 / uv / ruff / pytest、ruff→pytest の実行順序 |
 | `code-quality.md` | ハードコーディング禁止、日本語 Docstring、正常系・異常系テスト |
 | `secrets-direnv.md` | direnv + `.envrc`。`.env` は作らない |
 | `git-conventions.md` | ブランチ prefix、Conventional Commits、commit 前の branch 確認 |

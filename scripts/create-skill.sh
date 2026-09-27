@@ -47,6 +47,9 @@ RESOURCE_LIST=""
 LICENSE_VALUE="MIT"
 COMPATIBILITY_VALUE=""
 SKILLS_DIR="$(dirname "$0")/../skills"
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# requires-python は .python-version の minor に合わせる(ここにバージョン番号を書かない)
+PYTHON_MINOR="$(cut -d. -f1,2 "$REPO_ROOT/.python-version")"
 
 for arg in "$@"; do
     case "$arg" in
@@ -176,7 +179,7 @@ if [ "$WITH_PYTHON" = true ]; then
         echo "version = \"0.1.0\""
         echo "description = \"$DESCRIPTION\""
         echo "readme = \"SKILL.md\""
-        echo "requires-python = \">=3.12\""
+        echo "requires-python = \">=$PYTHON_MINOR\""
         echo "dependencies = []"
         echo
         echo "[build-system]"

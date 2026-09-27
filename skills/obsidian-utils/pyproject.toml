@@ -3,7 +3,7 @@ name = "obsidian-utils"
 version = "0.1.0"
 description = "Utilities for managing Obsidian Vaults"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = []
 
 [build-system]

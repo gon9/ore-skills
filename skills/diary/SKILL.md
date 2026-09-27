@@ -2,7 +2,7 @@
 name: diary
 description: Interactive diary writing assistant that guides users through journal entries using interview-style questions. Supports technical research when topics require investigation. Use when the user wants to write a diary, journal entry, or daily reflection.
 license: MIT
-compatibility: Python 3.12+
+compatibility: Python 3.14+
 metadata:
   author: gon9a
   version: "1.0"

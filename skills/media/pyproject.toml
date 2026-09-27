@@ -3,7 +3,7 @@ name = "media"
 version = "0.1.0"
 description = "Skills for media processing (YouTube, etc.)"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
     "common",
     "youtube-transcript-api>=0.6.3",

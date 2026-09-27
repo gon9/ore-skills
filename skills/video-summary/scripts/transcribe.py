@@ -2,7 +2,7 @@
 # dependencies = [
 #     "openai>=1.0.0",
 # ]
-# requires-python = ">=3.12"
+# requires-python = ">=3.14"
 # ///
 """音声ファイルから Whisper API で文字起こしを行う。
 

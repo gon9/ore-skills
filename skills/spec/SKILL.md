@@ -2,7 +2,7 @@
 name: spec
 description: Validates specification documents to ensure they contain required sections (概要, 要件, 構成). Use when checking design documents, specification files, or when the user mentions spec validation, document format checking, or requirements verification.
 license: MIT
-compatibility: Requires Python 3.12+
+compatibility: Requires Python 3.14+
 ---
 
 # Spec Skill

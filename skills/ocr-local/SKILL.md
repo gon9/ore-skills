@@ -2,7 +2,7 @@
 name: ocr-local
 description: ローカル Tesseract OCR でスクリーンショット画像群を Markdown に文字起こしする。Playwright による自動スクショ取得も可能。社外秘ドキュメントを外部 API に出さずに処理したいときに使う。
 license: MIT
-compatibility: Python 3.12+, Tesseract OCR 4.x+, Playwright (optional)
+compatibility: Python 3.14+, Tesseract OCR 4.x+, Playwright (optional)
 ---
 
 # ocr-local

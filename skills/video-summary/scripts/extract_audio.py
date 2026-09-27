@@ -1,6 +1,6 @@
 # /// script
 # dependencies = []
-# requires-python = ">=3.12"
+# requires-python = ">=3.14"
 # ///
 """動画ファイルから音声を抽出する。
 
