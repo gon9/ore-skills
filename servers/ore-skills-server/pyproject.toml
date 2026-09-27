@@ -3,7 +3,7 @@ name = "ore-skills-server"
 version = "0.1.0"
 description = "MCP Server for ore-skills"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
     "mcp>=1.0.0",
     "common",

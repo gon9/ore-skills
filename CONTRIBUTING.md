@@ -61,7 +61,7 @@ skills/
 name: your-skill-name
 description: このスキルが何をするか、いつ使うかを明確に記述。AIが発見しやすい具体的なキーワードを含めること。
 license: MIT
-compatibility: Python 3.12+
+compatibility: Python 3.14+
 metadata:
   author: your-name
   version: "1.0"
@@ -106,7 +106,7 @@ uv run -m your_skill_name.main --input data.json
 
 - **Frontmatter — オプションフィールド（agentskills.io 標準）**:
   - `license`: ライセンス名またはライセンスファイルへの参照（例: `MIT`, `Apache-2.0`）
-  - `compatibility`: 1-500文字、環境要件を記載（例: `Requires Python 3.12+ and uv`）。要件が特にない汎用スキルは省略可
+  - `compatibility`: 1-500文字、環境要件を記載（例: `Requires Python 3.14+ and uv`）。要件が特にない汎用スキルは省略可
   - `metadata`: 任意のキー・バリューマップ。`author`, `version` 等を推奨
   - `allowed-tools`: 事前承認されたツールのスペース区切りリスト（例: `Bash(git:*) Read`）。実験的機能
 
@@ -132,7 +132,7 @@ name = "your-skill-name"
 version = "0.1.0"
 description = "Your skill description"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
     "common",
     # 必要な外部依存関係を追加
@@ -226,7 +226,7 @@ skills-ref validate ./skills/your-skill-name
 # dependencies = [
 #   "requests>=2.31,<3",
 # ]
-# requires-python = ">=3.12"
+# requires-python = ">=3.14"
 # ///
 import requests
 ```
@@ -244,7 +244,7 @@ import requests
 
 ### Python コード
 
-- **バージョン**: Python 3.12+
+- **バージョン**: `.python-version` に従う（`requires-python` はその minor に揃える）
 - **Linter/Formatter**: `ruff`
 - **Docstring**: 日本語で記述
 - **型ヒント**: 可能な限り使用

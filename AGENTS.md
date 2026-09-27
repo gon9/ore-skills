@@ -10,7 +10,7 @@ agentskills.io 仕様に準拠した SKILL.md を核に、Windsurf と Claude Co
 
 ## 技術スタック
 
-- **言語**: Python 3.12
+- **言語**: Python（バージョンは `.python-version` が正典）
 - **パッケージマネージャ**: uv (Workspace機能)
 - **Linter/Formatter**: ruff
 - **テスト**: pytest

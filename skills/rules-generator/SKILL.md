@@ -2,7 +2,7 @@
 name: rules-generator
 description: "プロジェクトのソースコード・依存関係・ディレクトリ構造を解析し、AGENTS.md を生成する。新規プロジェクトのセットアップ時、または既存の AGENTS.md の品質チェック・更新時に使用する。"
 license: MIT
-compatibility: Requires Python 3.12+
+compatibility: Requires Python 3.14+
 metadata:
   author: gon9a
   version: "2.0"

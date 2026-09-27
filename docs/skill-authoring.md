@@ -96,14 +96,14 @@ YAML の未クオート文字列に `: ` を含めると壊れる。
 
 ```yaml
 description: Triggers on keywords: prompt review, system prompt.
-compatibility: Requires Node.js. Optional: Python 3.12+.
+compatibility: Requires Node.js. Optional: Python 3.14+.
 ```
 
 使う:
 
 ```yaml
 description: "Triggers on keywords: prompt review, system prompt."
-compatibility: "Requires Node.js. Optional: Python 3.12+."
+compatibility: "Requires Node.js. Optional: Python 3.14+."
 ```
 
 ## この repo の運用

@@ -3,7 +3,7 @@ name = "pptx-skill"
 version = "1.0.0"
 description = "PowerPoint (.pptx) generation and editing skill"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
     "Pillow>=10.0",
 ]
