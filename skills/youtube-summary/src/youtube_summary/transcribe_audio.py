@@ -1,6 +1,9 @@
 import os
 import sys
 
+# 同じ文がこの回数を超えて続いたら Whisper のループ(ハルシネーション)とみなして打ち切る
+MAX_REPEATED_SEGMENTS = 5
+
 try:
     from faster_whisper import WhisperModel
 except ImportError:
@@ -42,7 +45,7 @@ def transcribe_audio(audio_path, output_path="transcript.txt", model_size="small
         else:
             repeat_count = 0
         
-        if repeat_count > 5:
+        if repeat_count > MAX_REPEATED_SEGMENTS:
             print("Warning: Detected looping text, stopping transcription.", file=sys.stderr)
             break
             

@@ -2,6 +2,20 @@ import argparse
 from collections import defaultdict
 from pathlib import Path
 
+START_MARKER = "<!-- INDEX_START -->"
+END_MARKER = "<!-- INDEX_END -->"
+
+# ファイル名に含まれるキーワード → カテゴリ(上から順に判定する)
+FILENAME_RULES = (
+    (("adhd", "落合"), "生産性・効率化"),
+    (("pw", "パスワード"), "リソース・参考情報"),
+    (("chatgpt", "パーソナライズ"), "リソース・参考情報"),
+    (("やること", "todo"), "タスク管理"),
+    (("夢日記",), "日記・記録"),
+    (("旅行",), "日記・記録"),
+    (("アントラーズ", "サッカー"), "趣味・関心"),
+)
+
 
 def extract_tags(content):
     """ファイル内容からタグを抽出"""
@@ -58,20 +72,9 @@ def infer_category_from_content(file_path, content):
     content_lower = content.lower()
     
     # ファイル名ベースの推測
-    if "adhd" in filename or "落合" in filename:
-        return "生産性・効率化"
-    if "pw" in filename or "パスワード" in filename:
-        return "リソース・参考情報"
-    if "chatgpt" in filename or "パーソナライズ" in filename:
-        return "リソース・参考情報"
-    if "やること" in filename or "todo" in filename:
-        return "タスク管理"
-    if "夢日記" in filename:
-        return "日記・記録"
-    if "旅行" in filename:
-        return "日記・記録"
-    if "アントラーズ" in filename or "サッカー" in filename:
-        return "趣味・関心"
+    for words, category in FILENAME_RULES:
+        if any(word in filename for word in words):
+            return category
     
     # 内容ベースの推測（キーワード頻度）
     keywords = {
@@ -92,14 +95,62 @@ def infer_category_from_content(file_path, content):
     
     return "未分類"
 
+def categorize_files(files):
+    """ファイルをカテゴリごとに分類する。読めないファイルは「エラー」に入れる"""
+    categorized_files = defaultdict(list)
+    for f in files:
+        try:
+            content = f.read_text(encoding="utf-8")
+            tags = extract_tags(content)
+
+            if tags:
+                category = categorize_by_tags(tags)
+            else:
+                # タグがない場合は内容から推測
+                category = infer_category_from_content(f, content)
+
+            categorized_files[category].append(f)
+        except Exception as e:
+            print(f"Warning: Could not process {f.name}: {e}")
+            categorized_files["エラー"].append(f)
+    return categorized_files
+
+def build_index_section(categorized_files):
+    """カテゴリ別のリンク一覧をマーカー付きのセクション文字列にする"""
+    index_lines = []
+    for category in sorted(categorized_files.keys()):
+        index_lines.append(f"### {category}\n")
+        for f in sorted(categorized_files[category]):
+            index_lines.append(f"- [{f.stem}]({f.name})")
+        index_lines.append("")
+
+    index_content = "\n".join(index_lines)
+    return f"{START_MARKER}\n\n## Index\n\n{index_content}{END_MARKER}"
+
+def merge_index_section(content, new_section):
+    """既存のマーカー区間を置き換える。マーカーがなければ tags 行の前(なければ末尾)に追記する。
+
+    マーカーが壊れている場合は None を返す。
+    """
+    if START_MARKER in content and END_MARKER in content:
+        pre, remainder = content.split(START_MARKER)[:2]
+        if END_MARKER not in remainder:
+            return None
+        post = remainder.split(END_MARKER, 1)[1]
+        return pre + new_section + post
+
+    lines = content.splitlines()
+    for i, line in enumerate(lines):
+        if line.strip().startswith("tags:"):
+            lines.insert(i, "")
+            lines.insert(i, new_section)
+            return "\n".join(lines)
+    return content + "\n\n" + new_section + "\n"
+
 def update_index(vault_dir: Path):
     target_dir = vault_dir / "docs_obsidian/10_Notes/Personal"
     index_file = target_dir / "つれづれメモ.md"
-    
-    # マーカー定義
-    START_MARKER = "<!-- INDEX_START -->"
-    END_MARKER = "<!-- INDEX_END -->"
-    
+
     if not target_dir.exists():
         print(f"Error: Directory {target_dir} not found.")
         return
@@ -110,38 +161,9 @@ def update_index(vault_dir: Path):
 
     # ファイル一覧取得とカテゴリ分類
     files = sorted([f for f in target_dir.glob("*.md") if f.name != index_file.name])
-    
-    categorized_files = defaultdict(list)
-    
-    for f in files:
-        try:
-            content = f.read_text(encoding="utf-8")
-            tags = extract_tags(content)
-            
-            if tags:
-                category = categorize_by_tags(tags)
-            else:
-                # タグがない場合は内容から推測
-                category = infer_category_from_content(f, content)
-            
-            categorized_files[category].append(f)
-        except Exception as e:
-            print(f"Warning: Could not process {f.name}: {e}")
-            categorized_files["エラー"].append(f)
-    
-    # Index生成
-    index_lines = []
-    for category in sorted(categorized_files.keys()):
-        index_lines.append(f"### {category}\n")
-        for f in sorted(categorized_files[category]):
-            title = f.stem
-            link = f"- [{title}]({f.name})"
-            index_lines.append(link)
-        index_lines.append("")
-    
-    index_content = "\n".join(index_lines)
-    new_section = f"{START_MARKER}\n\n## Index\n\n{index_content}{END_MARKER}"
-    
+    categorized_files = categorize_files(files)
+    new_section = build_index_section(categorized_files)
+
     # ファイル読み込み
     try:
         content = index_file.read_text(encoding="utf-8")
@@ -149,31 +171,10 @@ def update_index(vault_dir: Path):
         print(f"Error reading file: {e}")
         return
 
-    # マーカーが存在するか確認して置換または追記
-    if START_MARKER in content and END_MARKER in content:
-        parts = content.split(START_MARKER)
-        pre = parts[0]
-        remainder = parts[1]
-        if END_MARKER in remainder:
-            post = remainder.split(END_MARKER, 1)[1]
-            new_content = pre + new_section + post
-        else:
-            print("Error: Markers are corrupted.")
-            return
-    else:
-        lines = content.splitlines()
-        last_tags_index = -1
-        for i, line in enumerate(lines):
-            if line.strip().startswith("tags:"):
-                last_tags_index = i
-                break
-        
-        if last_tags_index != -1:
-            lines.insert(last_tags_index, "")
-            lines.insert(last_tags_index, new_section)
-            new_content = "\n".join(lines)
-        else:
-            new_content = content + "\n\n" + new_section + "\n"
+    new_content = merge_index_section(content, new_section)
+    if new_content is None:
+        print("Error: Markers are corrupted.")
+        return
 
     # 書き込み
     try:

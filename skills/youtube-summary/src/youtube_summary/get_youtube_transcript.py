@@ -4,6 +4,11 @@ import re
 import subprocess
 from urllib.parse import parse_qs, urlparse
 
+try:
+    from youtube_transcript_api import YouTubeTranscriptApi
+except ImportError:  # 任意依存。未インストールなら yt-dlp 経由にフォールバックする
+    YouTubeTranscriptApi = None
+
 
 def get_video_id(url):
     """
@@ -38,47 +43,36 @@ def get_transcript_api(video_id):
     """
     youtube_transcript_apiを使用して字幕を取得する
     """
+    if YouTubeTranscriptApi is None:
+        return None
+
+    # 1. 直接 get_transcript を試す (日本語 -> 英語)
     try:
-        from youtube_transcript_api import YouTubeTranscriptApi
-        
-        # 1. 直接 get_transcript を試す (日本語 -> 英語)
-        try:
-            transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['ja', 'en'])
-            return clean_transcript_text(transcript)
-        except Exception:
-            pass
-            
-        # 2. list_transcripts 経由で探す
-        try:
-            transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
-            
-            # 手動作成の日本語
-            try:
-                t = transcript_list.find_manually_created_transcript(['ja'])
-                return clean_transcript_text(t.fetch())
-            except:
-                pass
-                
-            # 自動生成の日本語
-            try:
-                t = transcript_list.find_generated_transcript(['ja'])
-                return clean_transcript_text(t.fetch())
-            except:
-                pass
+        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['ja', 'en'])
+        return clean_transcript_text(transcript)
+    except Exception:
+        pass
 
-            # 英語など
-            for t in transcript_list:
-                return clean_transcript_text(t.fetch())
-                
-        except Exception:
-            pass
-            
-        return None
-
-    except ImportError:
-        return None
+    # 2. list_transcripts 経由で探す
+    try:
+        return _fetch_from_transcript_list(YouTubeTranscriptApi.list_transcripts(video_id))
     except Exception:
         return None
+
+def _fetch_from_transcript_list(transcript_list):
+    """
+    字幕一覧から 手動作成の日本語 → 自動生成の日本語 → 先頭の字幕 の順に取得する
+    """
+    for find in (transcript_list.find_manually_created_transcript, transcript_list.find_generated_transcript):
+        try:
+            return clean_transcript_text(find(['ja']).fetch())
+        except Exception:
+            pass
+
+    # 英語など
+    for t in transcript_list:
+        return clean_transcript_text(t.fetch())
+    return None
 
 def clean_vtt(vtt_content):
     lines = vtt_content.splitlines()
@@ -86,16 +80,28 @@ def clean_vtt(vtt_content):
     seen = set()
     timestamp_pattern = re.compile(r'\d{2}:\d{2}:\d{2}\.\d{3} --> \d{2}:\d{2}:\d{2}\.\d{3}')
     
-    for line in lines:
-        line = line.strip()
-        if not line: continue
-        if line == 'WEBVTT' or line.startswith('Kind:') or line.startswith('Language:'): continue
-        if timestamp_pattern.match(line): continue
-        line = re.sub(r'<[^>]+>', '', line)
-        if line not in seen:
-            text_lines.append(line)
-            seen.add(line)
+    for raw_line in lines:
+        stripped = raw_line.strip()
+        if not stripped:
+            continue
+        if stripped == 'WEBVTT' or stripped.startswith(('Kind:', 'Language:')):
+            continue
+        if timestamp_pattern.match(stripped):
+            continue
+        text = re.sub(r'<[^>]+>', '', stripped)
+        if text not in seen:
+            text_lines.append(text)
+            seen.add(text)
     return "\n".join(text_lines)
+
+def _remove_quietly(path):
+    """
+    一時ファイルを削除する。既に消えている・消せない場合は無視する
+    """
+    try:
+        os.remove(path)
+    except OSError:
+        pass
 
 def get_transcript_ytdlp(url):
     """
@@ -106,8 +112,7 @@ def get_transcript_ytdlp(url):
     
     # Clean up old files
     for f in glob.glob(f"{output_template}*"):
-        try: os.remove(f)
-        except: pass
+        _remove_quietly(f)
 
     cmd = [
         "yt-dlp",
@@ -141,7 +146,6 @@ def get_transcript_ytdlp(url):
     
     # Clean up
     for f in vtt_files:
-        try: os.remove(f)
-        except: pass
+        _remove_quietly(f)
         
     return clean_vtt(content)
