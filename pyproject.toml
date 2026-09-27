@@ -27,6 +27,12 @@ target-version = "py312"
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "PL", "RUF"]
 ignore = []
+# Docstring・コメントは日本語で書く規約のため、全角括弧は誤字扱いしない
+allowed-confusables = ["（", "）"]
+
+[tool.ruff.lint.per-file-ignores]
+# テストの期待値は定数化するより直書きの方が読みやすい
+"**/tests/**" = ["PLR2004"]
 
 [tool.ruff.format]
 quote-style = "double"

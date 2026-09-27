@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 import subprocess
 import sys
@@ -13,7 +14,6 @@ def get_video_info(url):
     cmd = ["yt-dlp", "--dump-json", url]
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, check=True)
-        import json
         data = json.loads(result.stdout)
         print(f"タイトル: {data.get('title')}", file=sys.stderr)
         print(f"時間: {data.get('duration')}秒", file=sys.stderr)
