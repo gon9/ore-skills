@@ -268,3 +268,13 @@ def test_handoff_is_private(
     assert _run(monkeypatch, capsys, {"session_id": "s", "transcript_path": str(transcript), "prompt": "続き"})
     assert env.stat().st_mode & 0o777 == rg.PRIVATE_DIR_MODE
     assert next(env.glob("*.md")).stat().st_mode & 0o777 == rg.PRIVATE_FILE_MODE
+
+
+def test_handoffs_in_same_second_do_not_overwrite(tmp_path: Path) -> None:
+    state = rg.TranscriptState(context_tokens=BIG)
+    out = tmp_path / "handoff"
+    first = rg.write_handoff(state, {"session_id": "s", "prompt": "画面を作る"}, "codex", out, NOW)
+    second = rg.write_handoff(state, {"session_id": "s", "prompt": "テストを書く"}, "codex", out, NOW)
+    assert first != second
+    assert "画面を作る" in first.read_text(encoding="utf-8")
+    assert "テストを書く" in second.read_text(encoding="utf-8")

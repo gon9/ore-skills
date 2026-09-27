@@ -45,6 +45,7 @@ RECENT_PROMPTS = 5
 SNIPPET_CHARS = 1500
 PRIVATE_DIR_MODE = 0o700
 PRIVATE_FILE_MODE = 0o600
+MAX_NAME_ATTEMPTS = 100
 
 CONTINUE_PATTERN = re.compile(
     r"^\s*(/goal\b.*|続き|つづき|続けて|続行|再開|continue|resume|go on|keep going)",
@@ -223,7 +224,6 @@ def write_handoff(state: TranscriptState, hook_input: dict, agent: str, out_dir:
     out_dir.chmod(PRIVATE_DIR_MODE)  # 会話内容を含むため本人以外に読ませない(既存ディレクトリも締める)
     session = _safe_id(str(hook_input.get("session_id", "unknown")))
     local = now.astimezone()
-    path = out_dir / f"{local:%Y%m%d-%H%M%S}-{agent}-{session[:8]}.md"
     cwd = str(hook_input.get("cwd", ""))
     prompts = "\n".join(f"{i}. {_clip(p)}" for i, p in enumerate(state.user_prompts[-RECENT_PROMPTS:], 1))
     sections = [
@@ -257,9 +257,21 @@ def write_handoff(state: TranscriptState, hook_input: dict, agent: str, out_dir:
         "- まずこのファイルと `git status` / `git log -5` で現状を把握する",
         "- 詳細が要るときだけ元 transcript を安いサブエージェントに grep させる(全文を読まない)",
     ]
-    path.write_text("\n".join(sections) + "\n", encoding="utf-8")
-    path.chmod(PRIVATE_FILE_MODE)
-    return path
+    return _create_unique(out_dir, f"{local:%Y%m%d-%H%M%S}-{agent}-{session[:8]}", "\n".join(sections) + "\n")
+
+
+def _create_unique(out_dir: Path, stem: str, body: str) -> Path:
+    """既存ファイルを上書きせず、衝突したら連番を付けて新規作成する(本人のみ読み書き可)。"""
+    for n in range(1, MAX_NAME_ATTEMPTS + 1):
+        path = out_dir / (f"{stem}.md" if n == 1 else f"{stem}-{n}.md")
+        try:
+            fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, PRIVATE_FILE_MODE)
+        except FileExistsError:
+            continue
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            f.write(body)
+        return path
+    raise FileExistsError(f"ハンドオフのファイル名が {MAX_NAME_ATTEMPTS} 回衝突しました: {stem}")
 
 
 def _bypass_marker(out_dir: Path, session: str) -> Path:
