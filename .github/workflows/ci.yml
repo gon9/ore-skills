@@ -1,0 +1,19 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version-file: .python-version
+      - name: ruff (hooks/ と tests/ のみ。既存コードの違反は別途対応)
+        run: uv run --no-project --with ruff ruff check hooks/ tests/
+      - name: pytest
+        run: uv run pytest -q

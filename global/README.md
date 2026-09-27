@@ -7,7 +7,7 @@
 規約の本文は **1か所にだけ**置き、各ツールはそこを参照する。
 
 ```
-plugins/ore-rules/rules/*.md   ← 共通規約（7本）= 正典
+plugins/ore-rules/rules/*.md   ← 共通規約（8本）= 正典
         ├─ Devin      : plugin として install（always_on ルール）
         └─ Claude Code: ~/.claude/CLAUDE.md から @import
 
@@ -55,6 +55,7 @@ https://github.com/gon9/ore-skills
 @~/workspace/ai-agent/ore-skills/plugins/ore-rules/rules/git-conventions.md
 @~/workspace/ai-agent/ore-skills/plugins/ore-rules/rules/architecture-defaults.md
 @~/workspace/ai-agent/ore-skills/plugins/ore-rules/rules/project-governance.md
+@~/workspace/ai-agent/ore-skills/plugins/ore-rules/rules/model-routing.md
 
 ## Claude Code 固有
 
@@ -69,5 +70,35 @@ devin plugins install https://github.com/gon9/ore-skills.git#plugins/ore-rules
 
 ## 確認方法
 
-Claude Code の新しいセッションで `/memory` を実行し、7本の共通規約と
+Claude Code の新しいセッションで `/memory` を実行し、8本の共通規約と
 `context-separation.md` が展開されていることを確認する。
+
+## コスト制御（Claude Code）
+
+方針は `plugins/ore-rules/rules/model-routing.md`。Codex 側は `global/codex/README.md`。
+`~/.claude/settings.json` に以下を入れる（Codex と同じ resume-guard フックを共用する）。
+
+```json
+{
+  "env": {
+    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet"
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/workspace/ai-agent/ore-skills/hooks/resume_guard.py\" --agent claude",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+- `CLAUDE_CODE_SUBAGENT_MODEL` は model 指定のないサブエージェントの既定。
+  定義側で `model:` を書いたエージェント（Explore = haiku 等）はそちらが優先される
+- 自動 compact の閾値は `/autocompact` で調整する（env を使うと `/autocompact` が効かなくなる）
