@@ -70,18 +70,33 @@ def load_catalog_config(path: Path) -> dict[str, dict[str, str]]:
     return skills
 
 
+def has_content(directory: Path) -> bool:
+    """ディレクトリに実ファイルがあるかを返す。
+
+    git は空ディレクトリやキャッシュだけのディレクトリを持たないため、それらを数えると
+    ローカルと CI(クリーンな checkout)で判定が食い違う。隠しファイルと __pycache__ は無視する。
+    """
+
+    if not directory.is_dir():
+        return False
+    for path in directory.rglob("*"):
+        relative = path.relative_to(directory).parts
+        if any(part.startswith(".") or part == "__pycache__" for part in relative):
+            continue
+        if path.is_file():
+            return True
+    return False
+
+
 def detect_structure(skill_dir: Path) -> str:
     """スキルの構成種別を判定する。"""
 
     parts: list[str] = []
-    if (skill_dir / "pyproject.toml").exists() or (skill_dir / "src").is_dir():
+    if (skill_dir / "pyproject.toml").exists() or has_content(skill_dir / "src"):
         parts.append("python")
-    if (skill_dir / "scripts").is_dir():
-        parts.append("scripts")
-    if (skill_dir / "references").is_dir():
-        parts.append("references")
-    if (skill_dir / "assets").is_dir():
-        parts.append("assets")
+    for name in ("scripts", "references", "assets"):
+        if has_content(skill_dir / name):
+            parts.append(name)
     if not parts:
         return "markdown"
     return ", ".join(parts)
