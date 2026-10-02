@@ -17,3 +17,5 @@ jobs:
         run: uv run ruff check .
       - name: pytest
         run: uv run pytest -q
+      - name: skill health (SKILL.md 検証 / カタログ鮮度 / スキル別テスト)
+        run: uv run bash scripts/check-skill-health.sh
