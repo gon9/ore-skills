@@ -1,3 +1,7 @@
+---
+status: frozen
+---
+
 # アーキテクチャ設計・管理方針
 
 Skillsの管理方法として、Git Submodule、Python Package、Monorepo構成などを比較検討した結果、以下の構成を採用します。

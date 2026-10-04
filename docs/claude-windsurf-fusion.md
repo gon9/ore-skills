@@ -1,3 +1,7 @@
+---
+status: frozen
+---
+
 # Claude Code × Windsurf 融合戦略
 
 ## エグゼクティブサマリー
