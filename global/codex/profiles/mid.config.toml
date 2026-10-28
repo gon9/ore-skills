@@ -1,0 +1,4 @@
+# codex --profile mid : 中堅タスク用（仕様が決まった実装・テスト追加・機械的リファクタを手元で回す）
+# 正典: ~/workspace/ai-agent/ore-skills/global/codex/README.md
+model = "gpt-6.1-terra"
+model_reasoning_effort = "low"
