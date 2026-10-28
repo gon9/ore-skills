@@ -89,3 +89,22 @@ apple-design / rules-generator / prompt-linter / hatch-pet
 
 結果: 注入スキル 27 → 12、`prompt-input` 26,452 → 21,526 文字。
 メモリ(`memories.use_memories`)は約 1.5 万字を毎回注入するが、利用価値を優先して維持している。
+
+## モデルの出し分け（2026-10-28〜）
+
+メインに最上位モデル（`gpt-6-astra`）を既定で置いていたことが、利用枠を食い潰す主因だった。
+世間で定番の「最上位モデルは計画と難所だけ、量の多い作業は安価モデル」の階層ルーティングにする。
+
+| 階層 | モデル / effort | 使いどころ | 設定 |
+|---|---|---|---|
+| 軽 | `gpt-6-luna` / low | 探索・要約・定型作業 | agent `scout`、profile `quick` |
+| 中堅 | `gpt-6.1-terra` / low | 仕様が決まった独立実装（sol の約1/4コスト・3.5倍速） | agent `builder` |
+| 日常（既定） | `gpt-6.1-sol` / low | メイン。判断を伴う実装・修正 | `config.toml` の `model` |
+| 最難関 | `gpt-6-astra` / high | 解けないバグ・設計判断・不可逆操作の検証 | agent `sage`、profile `deep` |
+
+- agent 定義は [agents/](agents/) を `~/.codex/agents/` に、profile は [profiles/](profiles/) を `~/.codex/` にコピーする
+  （Codex 0.134 以降、profile は `[profiles.x]` テーブルでなく `~/.codex/<name>.config.toml`）。
+- 振り分けの指示は `~/.codex/AGENTS.md` の「モデルの出し分け」節に置く。そこには agent 名だけを書き、モデル名は書かない。
+- 人が明示的に切り替えるとき: `codex -p deep`（難問）/ `codex -p quick`（軽作業）。
+- モデルが入れ替わったら `~/.codex/models_cache.json` の description（workhorse / frontier / fast and affordable）を見て、
+  この表と agents / profiles を更新する。
