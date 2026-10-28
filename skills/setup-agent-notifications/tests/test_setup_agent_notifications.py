@@ -7,6 +7,8 @@ import json
 import tomllib
 from pathlib import Path
 
+import pytest
+
 SCRIPT = Path(__file__).parents[1] / "scripts" / "setup_agent_notifications.py"
 SPEC = importlib.util.spec_from_file_location("setup_agent_notifications", SCRIPT)
 assert SPEC and SPEC.loader
@@ -51,9 +53,18 @@ def test_update_codex_config_keeps_existing_chain_that_already_calls_notifier(tm
     assert parsed["tui"]["notifications"] is True
 
 
-def test_install_and_check_in_temporary_home(tmp_path: Path) -> None:
+def test_install_and_check_in_temporary_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    # 通知手段の有無は実行環境（CI の Linux ランナー等）に依存するため固定する
+    monkeypatch.setattr(MODULE, "find_notification_backend", lambda: "/usr/bin/osascript")
     MODULE.install(tmp_path)
 
     assert MODULE.check(tmp_path) == 0
     assert (tmp_path / ".local" / "bin" / "agent-notify").stat().st_mode & 0o111
     assert "Notification" in json.loads((tmp_path / ".claude" / "settings.json").read_text())["hooks"]
+
+
+def test_check_reports_missing_backend(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(MODULE, "find_notification_backend", lambda: "")
+    MODULE.install(tmp_path)
+
+    assert MODULE.check(tmp_path) == 1
