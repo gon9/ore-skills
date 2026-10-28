@@ -1,0 +1,4 @@
+# codex --profile deep : 最難関タスク専用（設計判断・原因不明のバグ・大規模リファクタ計画）
+# 正典: ~/workspace/ai-agent/ore-skills/global/codex/README.md
+model = "gpt-6-astra"
+model_reasoning_effort = "high"

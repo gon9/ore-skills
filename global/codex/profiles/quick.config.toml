@@ -1,0 +1,4 @@
+# codex --profile quick : 定型・軽作業専用（質問応答・typo修正・コマンド実行・要約）
+# 正典: ~/workspace/ai-agent/ore-skills/global/codex/README.md
+model = "gpt-6-luna"
+model_reasoning_effort = "low"
