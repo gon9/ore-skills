@@ -143,6 +143,11 @@ def install(home: Path) -> None:
     print("Installed notification helpers and merged Claude/Codex configuration.")
 
 
+def find_notification_backend() -> str:
+    """macOS の通知手段のパスを返す。見つからなければ空文字を返す。"""
+    return shutil.which("terminal-notifier") or ("/usr/bin/osascript" if Path("/usr/bin/osascript").exists() else "")
+
+
 def check(home: Path) -> int:
     """現在の通知構成を検査し、欠落があれば非ゼロを返す。"""
     results: list[tuple[str, bool, str]] = []
@@ -169,7 +174,7 @@ def check(home: Path) -> int:
     results.append(("Codex external notify", codex_external, str(codex_config)))
     results.append(("Codex TUI notifications", codex_tui, str(codex_config)))
 
-    backend = shutil.which("terminal-notifier") or ("/usr/bin/osascript" if Path("/usr/bin/osascript").exists() else "")
+    backend = find_notification_backend()
     results.append(("macOS backend", bool(backend), backend or "missing"))
     for label, ok, detail in results:
         print(f"{'OK' if ok else 'MISSING':7} {label}: {detail}")
