@@ -56,6 +56,10 @@ origin = "workflow-patterns"
 channel = "stable"
 plugin_bundle = "core"
 
+[skills.test-value-review]
+origin = "owlclaw PR #180 (adapted)"
+channel = "stable"
+
 [skills.video-summary]
 origin = "既存・手動抽出"
 channel = "stable"
